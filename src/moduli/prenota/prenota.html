@@ -40,25 +40,42 @@
       </div>
 
       <div class="field">
-        <label for="f-name">Nome e cognome</label>
-        <input id="f-name" name="name" autocomplete="name" placeholder="Es. Maria Rossi">
-        <span class="err" id="e-name"></span>
+        <label for="f-nome">Nome</label>
+        <input id="f-nome" name="given-name" autocomplete="given-name" placeholder="Es. Maria" maxlength="40">
+        <span class="err" id="e-nome"></span>
+      </div>
+      <div class="field">
+        <label for="f-cognome">Cognome</label>
+        <input id="f-cognome" name="family-name" autocomplete="family-name" placeholder="Es. Rossi" maxlength="60">
+        <span class="err" id="e-cognome"></span>
       </div>
       <div class="field">
         <label for="f-phone">Cellulare</label>
         <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Es. 333 123 4567">
         <span class="err" id="e-phone"></span>
       </div>
+      <div class="field">
+        <label for="f-nascita">Data di nascita <small>(facoltativa)</small></label>
+        <input id="f-nascita" name="bday" type="date" autocomplete="bday" min="1920-01-01">
+        <span class="err" id="e-nascita"></span>
+      </div>
       <div class="field full">
         <label for="f-notes">Note <small>(facoltativo)</small></label>
         <textarea id="f-notes" name="notes" placeholder="Es. colore preferito, prima volta, mi ha presentata un'amica…"></textarea>
       </div>
 
+      <fieldset class="consents field full">
+        <legend class="lbl">Restiamo in contatto? <small>(facoltativo)</small></legend>
+        <label class="check"><input type="checkbox" id="f-promo"><span>Sì, voglio ricevere <b>promozioni e novità</b> dello studio su WhatsApp o SMS.</span></label>
+        <label class="check"><input type="checkbox" id="f-sumisura"><span>Sì, voglio ricevere <b>proposte su misura</b>, pensate in base ai trattamenti che ho fatto.</span></label>
+        <small class="consent-note">Puoi prenotare anche senza spuntarle, e cambiare idea quando vuoi scrivendo a Paola. Dettagli nell'<a href="#privacy">informativa privacy</a>.</small>
+      </fieldset>
+
       <div class="summary" id="summary" hidden></div>
 
       <div class="form-actions">
         <button class="btn btn-gold" type="submit" id="submitBtn">Conferma prenotazione</button>
-        <small id="privacyNote">Nome e cellulare li vede solo Paola, per contattarti in caso di imprevisti.</small>
+        <small id="privacyNote">I tuoi dati li vede solo Paola, per gestire i tuoi appuntamenti.</small>
       </div>
 
       <p class="legal-note">Inviando la richiesta dichiari di aver letto l'<a href="#privacy">informativa privacy</a>. Per favore non scrivere nelle note informazioni sulla salute: se ci sono allergie o esigenze particolari, ne parliamo in studio.</p>

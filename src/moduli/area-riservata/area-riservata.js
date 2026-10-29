@@ -22,7 +22,7 @@ function route() {
 addEventListener('hashchange', route);
 
 function setLocked(title, text) { $('locked').hidden = false; $('lockedTitle').textContent = title; $('lockedText').textContent = text; }
-const VIEWS = ['agenda', 'cassa', 'utenti', 'attivita'];
+const VIEWS = ['agenda', 'clienti', 'cassa', 'utenti', 'attivita'];
 function renderArea() {
   if (!area.ok) return;
   if (area.role !== 'admin' && (area.view === 'utenti' || area.view === 'attivita')) area.view = 'agenda';
@@ -30,7 +30,10 @@ function renderArea() {
   document.querySelectorAll('#areaTabs .admin-only').forEach(b => { b.hidden = area.role !== 'admin'; });
   [...$('areaTabs').children].forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === area.view)));
   VIEWS.forEach(v => { $('view-' + v).hidden = area.view !== v; });
+  // l'amministratore non blocca orari: vede solo l'elenco degli appuntamenti
+  $('blockForm').hidden = area.role === 'admin'; $('agendaGrid').classList.toggle('no-form', area.role === 'admin');
   if (area.view === 'agenda') renderAgenda();
+  else if (area.view === 'clienti') loadClienti();
   else if (area.view === 'cassa') renderCassa();
   else if (area.view === 'utenti') loadUsers();
   else loadActivity(true);
@@ -58,12 +61,15 @@ function renderAgenda() {
       : det ? `<b>${esc(det.name)}</b><span>${esc((det.treatments || []).join(' + '))} · €${det.price}</span><span class="sel">${esc(det.phone)}</span>${det.notes ? `<span class="note">${esc(det.notes)}</span>` : ''}`
       : '<b>Prenotazione dal sito</b>';
     const time = s.start === 0 && s.end >= 1440 ? 'Tutto il giorno' : `${hm(s.start)} – ${hm(s.end)}`;
+    const scheda = det && det.cliente_id ? `<button type="button" class="link-btn" data-scheda="${det.cliente_id}">Scheda</button>` : '';
     const wa = det ? `<a class="link-btn" href="https://wa.me/${intl(det.phone)}" target="_blank" rel="noopener">WhatsApp</a>` : '';
     const cash = det ? (det.incassato ? '<span class="link-btn ag-cash" style="text-decoration:none">Incassato ✓</span>' : `<button type="button" class="link-btn" data-cash="${s.id}">Registra incasso</button>`) : '';
-    return `<li><span class="ag-time">${time}</span><div class="ag-who">${who}</div><div class="ag-act">${cash}${wa}<button type="button" class="link-btn" data-del="${s.id}">${s.kind === 'block' ? 'Sblocca' : 'Annulla'}</button></div></li>`;
+    return `<li><span class="ag-time">${time}</span><div class="ag-who">${who}</div><div class="ag-act">${cash}${scheda}${wa}<button type="button" class="link-btn" data-del="${s.id}">${s.kind === 'block' ? 'Sblocca' : 'Annulla'}</button></div></li>`;
   }).join('')}</ul></div>`).join('');
 }
 $('agendaList').addEventListener('click', async e => {
+  const sc = e.target.closest('[data-scheda]');
+  if (sc) { cl.sel = sc.dataset.scheda; cl.isNew = false; area.view = 'clienti'; renderArea(); window.scrollTo(0, 0); return; }
   const c = e.target.closest('[data-cash]');
   if (c) {
     const det = area.bookings[c.dataset.cash]; if (!det) return;

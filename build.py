@@ -22,7 +22,7 @@ CSS_ORDER = ['base', 'header', 'hero', 'passaparola', 'trattamenti', 'listino', 
              'contatti', 'privacy', 'area-riservata', 'footer']
 # Ordine degli script (conta: alcuni usano funzioni e dati definiti nei precedenti)
 JS_ORDER = ['base/core', 'listino/listino', 'prenota/prenota', 'area-riservata/area-riservata',
-            'area-riservata/utenti', 'hero/hero', 'base/avvio', 'base/supabase', 'contatti/contatti']
+            'area-riservata/utenti', 'area-riservata/clienti', 'hero/hero', 'base/avvio', 'base/supabase', 'contatti/contatti']
 
 FONT_FACES = [('Cormorant Garamond', 'normal', 500, 'cormorant-garamond-latin-500-normal'),
               ('Cormorant Garamond', 'normal', 600, 'cormorant-garamond-latin-600-normal'),

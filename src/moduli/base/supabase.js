@@ -25,7 +25,9 @@ async function refreshSlots() {
   }
 }
 async function loadAgendaDetails() {
-  const { data, error } = await sb.from('bookings').select('id,slot_id,day,start_min,name,phone,treatments,price,notes,status,incassato').gte('day', todayIso());
+  const cols = 'id,slot_id,day,start_min,name,phone,treatments,price,notes,status,incassato';
+  let { data, error } = await sb.from('bookings').select(cols + ',cliente_id').gte('day', todayIso());
+  if (error) ({ data, error } = await sb.from('bookings').select(cols).gte('day', todayIso()));   // database non ancora aggiornato
   if (error) return;
   area.bookings = {};
   data.forEach(b => { if (b.slot_id) area.bookings[b.slot_id] = { ...b, date: b.day, start: b.start_min, price: Number(b.price) }; });

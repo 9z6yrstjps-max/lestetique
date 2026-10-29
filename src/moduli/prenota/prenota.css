@@ -61,3 +61,14 @@
 
 .legal-note{grid-column:1/-1;font-size:.78rem;color:var(--ink-soft);margin:0}
 .legal-note a{color:var(--rose)}
+
+/* consensi facoltativi */
+.consents{border:0;margin:0;padding:16px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.consents legend{float:left;width:100%;margin-bottom:2px;padding:16px 0 0}
+.consents legend small{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink-soft)}
+label.check{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;text-transform:none;letter-spacing:0;font-weight:400;font-size:.9rem;line-height:1.5;color:var(--ink);cursor:pointer}
+label.check input{width:20px;height:20px;margin:1px 0 0;padding:0;accent-color:var(--rose);cursor:pointer}
+label.check b{font-weight:600}
+label.check small{color:var(--ink-soft);font-size:.78rem}
+.consent-note{font-size:.78rem;color:var(--ink-soft)}
+.consent-note a{color:var(--rose)}

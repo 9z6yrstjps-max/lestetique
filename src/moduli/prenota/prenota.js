@@ -103,28 +103,35 @@ function setMode(mode) {
   state.mode = mode;
   $('submitBtn').textContent = mode === 'live' ? 'Conferma prenotazione' : 'Invia richiesta su WhatsApp';
   $('privacyNote').textContent = mode === 'live'
-    ? 'Nome e cellulare li vede solo Paola, per contattarti in caso di imprevisti.'
+    ? 'I tuoi dati li vede solo Paola, per gestire i tuoi appuntamenti.'
     : 'Il messaggio con giorno e ora si apre su WhatsApp: Paola ti risponde con la conferma.';
 }
 
 /* Invio */
 function waText(extra) {
-  const lines = [`Ciao Paola, sono ${$('f-name').value.trim()}.`, extra, '',
+  const lines = [`Ciao Paola, sono ${fullName()}.`, extra, '',
     `• Trattamento: ${state.picked.map(t => t.name).join(' + ')}`,
     `• Giorno: ${longDate(state.day)}`,
     `• Ora: ${hm(state.time)} (durata stimata ${dur(totalMin())})`,
     `• Cellulare: ${$('f-phone').value.trim()}`];
+  const nb = $('f-nascita').value; if (nb) lines.push(`• Data di nascita: ${nb.split('-').reverse().join('/')}`);
   const n = $('f-notes').value.trim(); if (n) lines.push(`• Note: ${n}`);
+  if ($('f-promo').checked) lines.push('• Sì alle promozioni e novità');
+  if ($('f-sumisura').checked) lines.push('• Sì alle proposte su misura');
   lines.push('', 'Grazie!');
   return lines.join('\n');
 }
+function fullName() { return `${$('f-nome').value.trim()} ${$('f-cognome').value.trim()}`.trim(); }
 function waLink(text) { return `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`; }
 function validate() {
   let ok = true;
   const set = (id, msg) => { $(id).textContent = msg; if (msg) ok = false; };
   set('e-treat', state.picked.length ? '' : 'Scegli almeno un trattamento.');
   set('e-time', state.day && state.time != null ? '' : 'Scegli giorno e orario.');
-  set('e-name', $('f-name').value.trim() ? '' : 'Scrivi il tuo nome.');
+  set('e-nome', $('f-nome').value.trim() ? '' : 'Scrivi il tuo nome.');
+  set('e-cognome', $('f-cognome').value.trim() ? '' : 'Scrivi il tuo cognome.');
+  const nb = $('f-nascita').value;
+  set('e-nascita', !nb || (nb >= '1920-01-01' && nb <= todayIso()) ? '' : 'Controlla la data di nascita.');
   set('e-phone', $('f-phone').value.replace(/\D/g, '').length >= 8 ? '' : 'Serve un numero di cellulare valido.');
   return ok;
 }
@@ -146,7 +153,7 @@ $('bookForm').addEventListener('submit', async e => {
       <p><b>${longDate(booking.date)}, ore ${hm(booking.start)}</b><br>${esc(booking.treatments.join(' + '))}</p>
       <p class="small">È già nell'agenda di Paola. Se vuoi, avvisala anche su WhatsApp.</p>
       <div class="c-actions"><a class="btn btn-wa" href="${waLink(text)}" target="_blank" rel="noopener">${WA_ICON}Avvisa Paola</a></div>`);
-    state.picked = []; state.time = null; $('f-notes').value = ''; renderPicked();
+    state.picked = []; state.time = null; $('f-notes').value = ''; $('f-promo').checked = $('f-sumisura').checked = false; renderPicked();
   } catch (err) {
     if (err && err.code === 'taken') {
       $('e-time').textContent = 'Questo orario è appena stato preso. Scegline un altro.';
@@ -165,7 +172,11 @@ $('bookForm').addEventListener('submit', async e => {
 async function book() {
   const date = state.day, start = state.time, dur = totalMin();
   const treatments = state.picked.map(t => t.name), price = state.picked.reduce((s, t) => s + t.price, 0);
-  const { data, error } = await sb.rpc('book', { p_day: date, p_start: start, p_duration: dur, p_name: $('f-name').value.trim(), p_phone: $('f-phone').value.trim(), p_treatments: treatments, p_price: price, p_notes: $('f-notes').value.trim() });
+  const base = { p_day: date, p_start: start, p_duration: dur, p_phone: $('f-phone').value.trim(), p_treatments: treatments, p_price: price, p_notes: $('f-notes').value.trim() };
+  let { data, error } = await sb.rpc('prenota', { ...base, p_nome: $('f-nome').value.trim(), p_cognome: $('f-cognome').value.trim(), p_nascita: $('f-nascita').value || null, p_promo: $('f-promo').checked, p_su_misura: $('f-sumisura').checked });
+  if (error && /PGRST202|Could not find the function/i.test((error.code || '') + ' ' + (error.message || ''))) {
+    ({ data, error } = await sb.rpc('book', { ...base, p_name: fullName() }));   // database non ancora aggiornato
+  }
   if (error) {
     const m = error.message || '';
     if (m.includes('orario_occupato')) throw { code: 'taken' };

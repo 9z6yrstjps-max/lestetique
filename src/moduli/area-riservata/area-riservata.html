@@ -1,4 +1,4 @@
-<!-- Area riservata: login, agenda, registro di cassa, utenti, attività -->
+<!-- Area riservata: login, agenda, clienti, registro di cassa, utenti, attività -->
 <section class="area" id="riservata" hidden>
   <div class="wrap">
     <div class="area-head">
@@ -9,6 +9,7 @@
       </div>
       <div class="seg" role="tablist" aria-label="Sezioni area riservata" id="areaTabs" hidden>
         <button type="button" role="tab" data-view="agenda" aria-selected="true">Agenda</button>
+        <button type="button" role="tab" data-view="clienti" aria-selected="false">Clienti</button>
         <button type="button" role="tab" data-view="cassa" aria-selected="false">Registro di cassa</button>
         <button type="button" role="tab" data-view="utenti" aria-selected="false" class="admin-only" hidden>Utenti</button>
         <button type="button" role="tab" data-view="attivita" aria-selected="false" class="admin-only" hidden>Attività</button>
@@ -36,7 +37,7 @@
 
     <!-- AGENDA -->
     <div class="view" id="view-agenda" hidden>
-      <div class="agenda-grid">
+      <div class="agenda-grid" id="agendaGrid">
         <form class="block-form" id="blockForm" novalidate>
           <p class="lbl">Blocca un orario</p>
           <div class="field full"><label for="b-date">Giorno</label><input id="b-date" type="date"></div>
@@ -53,6 +54,36 @@
       </div>
     </div>
 
+    <!-- CLIENTI: schede, storico trattamenti e consensi -->
+    <div class="view" id="view-clienti" hidden>
+      <div class="cl-bar">
+        <input id="cl-q" type="search" placeholder="Cerca nome, cognome o telefono" aria-label="Cerca cliente" autocomplete="off">
+        <select id="cl-tr" aria-label="Filtra per trattamento fatto"><option value="">Tutti i trattamenti</option></select>
+        <select id="cl-last" aria-label="Filtra per ultima visita">
+          <option value="">Ultima visita</option>
+          <option value="30">Assente da 1+ mese</option>
+          <option value="60">Assente da 2+ mesi</option>
+          <option value="90">Assente da 3+ mesi</option>
+          <option value="180">Assente da 6+ mesi</option>
+        </select>
+        <select id="cl-cons" aria-label="Filtra per consenso">
+          <option value="">Consensi</option>
+          <option value="promo">Sì promozioni</option>
+          <option value="su_misura">Sì proposte su misura</option>
+          <option value="nessuno">Nessun consenso</option>
+        </select>
+        <button type="button" class="btn btn-gold btn-sm" id="cl-new">Nuova cliente</button>
+      </div>
+      <p class="cassa-status" id="cl-status" role="status" hidden></p>
+      <div class="cl-grid">
+        <div class="cl-side">
+          <div class="cl-meta"><span id="cl-count"></span><button type="button" class="link-btn" id="cl-csv">Lista per campagna</button></div>
+          <ul class="cl-list" id="cl-list"></ul>
+        </div>
+        <div class="cl-card" id="cl-card"><p class="hint">Scegli una cliente per vedere la sua scheda, oppure premi «Nuova cliente».</p></div>
+      </div>
+    </div>
+
     <!-- UTENTI (solo amministratore) -->
     <div class="view" id="view-utenti" hidden>
       <div class="admin-grid">
@@ -62,8 +93,8 @@
         </table></div>
         <aside class="help-card">
           <p class="lbl">I ruoli</p>
-          <p><b>Amministratore</b> · tutto: agenda, cassa con eliminazione di qualsiasi movimento, utenti e registro delle attività.</p>
-          <p><b>Editor</b> · agenda e registro di cassa. Può eliminare solo i movimenti che ha inserito lei nella stessa giornata.</p>
+          <p><b>Amministratore</b> · tutto: agenda, clienti (anche eliminarle), cassa con eliminazione di qualsiasi movimento, utenti e registro delle attività.</p>
+          <p><b>Editor</b> · agenda, clienti e registro di cassa. Può eliminare solo i movimenti che ha inserito lei nella stessa giornata.</p>
           <p class="lbl" style="margin-top:8px">Aggiungere una persona</p>
           <p>Crea l'account in Supabase, in <i>Authentication → Users → Add user</i>, poi torna qui e assegnale un ruolo.</p>
         </aside>
@@ -72,7 +103,7 @@
 
     <!-- ATTIVITÀ (solo amministratore) -->
     <div class="view" id="view-attivita" hidden>
-      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
+      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, clienti, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
       <ol class="act-list" id="actList"></ol>
       <button type="button" class="btn btn-ghost" id="actMore" hidden>Carica altre</button>
     </div>

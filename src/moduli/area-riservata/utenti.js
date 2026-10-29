@@ -52,6 +52,14 @@ function describe(a) {
     if (d.incassato && !o.incassato) return `Ha registrato l'incasso della prenotazione di ${b}`;
     return `Ha modificato la prenotazione di ${b}`;
   }
+  if (a.entity === 'clienti') {
+    if (a.action === 'insert') return `Nuova scheda cliente: ${esc(x.nome)} ${esc(x.cognome)}${x.origine === 'sito' ? ' (prima prenotazione dal sito)' : ''}`;
+    return `Ha eliminato la scheda di ${esc(x.nome)} ${esc(x.cognome)}`;
+  }
+  if (a.entity === 'visite') {
+    const c = cl.list.find(k => k.id === x.cliente_id), who = c ? ` di ${esc(c.nome)} ${esc(c.cognome)}` : '';
+    return `${a.action === 'insert' ? 'Ha aggiunto allo storico' : 'Ha tolto dallo storico'}${who}: ${esc((x.treatments || []).join(' + '))} del ${shortD(x.day)}`;
+  }
   if (a.entity === 'staff') {
     const who = esc(emailOf(x.user_id));
     if (a.action === 'delete') return `Ha tolto l'accesso a ${who}`;
@@ -69,7 +77,7 @@ async function loadActivity(reset) {
   $('actMore').hidden = data.length < 50;
   $('actList').innerHTML = act.rows.length ? act.rows.map(a => {
     const when = new Date(a.at).toLocaleString('it-IT', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-    const who = a.email || (a.entity === 'bookings' ? 'Cliente dal sito' : 'Sistema');
+    const who = a.email || (a.entity === 'bookings' || a.entity === 'clienti' ? 'Cliente dal sito' : 'Sistema');
     return `<li class="act-${a.entity}"><span class="act-when">${when}</span><span class="act-who">${esc(who)}</span><span class="act-what">${describe(a)}</span></li>`;
   }).join('') : '<li class="cap-note">Ancora nessuna attività registrata.</li>';
 }

@@ -39,6 +39,7 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
   --wrap:1120px;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;font-variant-numeric:lining-nums}
@@ -296,6 +297,17 @@ textarea{min-height:92px;resize:vertical}
 .legal-note{grid-column:1/-1;font-size:.78rem;color:var(--ink-soft);margin:0}
 .legal-note a{color:var(--rose)}
 
+/* consensi facoltativi */
+.consents{border:0;margin:0;padding:16px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.consents legend{float:left;width:100%;margin-bottom:2px;padding:16px 0 0}
+.consents legend small{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink-soft)}
+label.check{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;text-transform:none;letter-spacing:0;font-weight:400;font-size:.9rem;line-height:1.5;color:var(--ink);cursor:pointer}
+label.check input{width:20px;height:20px;margin:1px 0 0;padding:0;accent-color:var(--rose);cursor:pointer}
+label.check b{font-weight:600}
+label.check small{color:var(--ink-soft);font-size:.78rem}
+.consent-note{font-size:.78rem;color:var(--ink-soft)}
+.consent-note a{color:var(--rose)}
+
 /* Contatti: WhatsApp, telefono, indirizzo e orari */
 .contact{background:var(--paper)}
 .contact .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(32px,6vw,80px);align-items:start}
@@ -368,7 +380,7 @@ body.legal .nav .back{display:inline-flex}
 .todo{background:#FFF1C9;color:#6B4E00;border-radius:4px;padding:0 4px}
 .legal-back{margin-top:24px}
 
-/* Area riservata: login, agenda, registro di cassa, utenti, attività */
+/* Area riservata: login, agenda, clienti, registro di cassa, utenti, attività */
 /* agenda di Paola */
 .agenda{background:#fff;border-top:1px solid var(--line)}
 .agenda-grid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:40px;align-items:start}
@@ -505,6 +517,54 @@ body.private footer .script{display:none}
 .act-cassa .act-what{color:var(--ink)} .act-bookings .act-who{color:var(--rose)}
 @media (max-width:860px){.admin-grid{grid-template-columns:1fr}.act-list li{grid-template-columns:1fr;gap:2px}}
 #areaTabs{flex-wrap:wrap;border-radius:22px}
+
+/* agenda senza modulo 'blocca' (amministratore) */
+.agenda-grid.no-form{grid-template-columns:1fr}
+
+/* clienti */
+.cl-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center}
+.cl-bar input{flex:2 1 240px;width:auto}
+.cl-bar select{flex:1 1 170px;width:auto}
+.cl-bar .btn{flex:none}
+.cl-grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:28px;align-items:start}
+.cl-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;font-size:.82rem;color:var(--ink-soft)}
+.cl-list{list-style:none;margin:0;padding:0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:auto;max-height:70vh}
+.cl-list li+li{border-top:1px solid var(--line)}
+.cl-list li.cap-note{padding:16px 18px}
+.cl-list button{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;text-align:left;font:inherit;color:var(--ink);background:none;border:0;padding:12px 18px;cursor:pointer}
+.cl-list button:hover{background:var(--blush)}
+.cl-list button[aria-current="true"]{background:var(--blush);box-shadow:inset 3px 0 0 var(--rose-mid)}
+.cl-name{font-size:.95rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cl-name b{font-weight:600}
+.cl-sub{grid-column:1;font-size:.78rem;color:var(--ink-soft)}
+.cl-tags{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+.cl-tags i{font-style:normal;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--rose);background:var(--blush);border:1px solid var(--rose-light);border-radius:999px;padding:1px 8px;white-space:nowrap}
+.cl-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:24px;min-width:0;position:sticky;top:calc(84px + env(safe-area-inset-top,0px))}
+.cl-card>.hint{margin:0}
+.cl-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.cl-head h3{font-size:1.9rem;margin:6px 0 4px}
+.cl-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.cl-stats div{background:var(--paper);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.cl-stats b{font-family:var(--f-display);font-size:1.2rem;font-weight:600;line-height:1.15;overflow-wrap:break-word;hyphens:auto}
+.cl-stats span{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.cl-form,.cl-visit{padding:0;box-shadow:none;border-radius:0;background:none}
+.cl-form .consents legend{padding-top:0}
+.cl-form .consents{padding-top:0;border-top:0}
+.cl-del{color:var(--neg)}
+.cl-hist{border-top:1px solid var(--line);padding-top:20px;display:flex;flex-direction:column;gap:14px}
+.cl-visit{grid-template-columns:150px minmax(0,1fr);gap:12px 14px;background:var(--blush);border-radius:16px;padding:16px}
+.cl-visit .full{grid-column:1/-1}
+.cl-visit .v-go{justify-content:flex-end}
+.cl-visit .picked li{background:#fff}
+.cl-visits{list-style:none;margin:0;padding:0}
+.cl-visits li{display:grid;grid-template-columns:110px minmax(0,1fr) auto auto auto;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+.cl-visits li.cap-note{display:block;border:0}
+.cv-day{color:var(--ink-soft);font-variant-numeric:tabular-nums lining-nums}
+.cv-p{font-weight:600;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+.cv-tag{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+.cv-tag.fut{color:var(--rose);font-weight:600}
+@media (max-width:900px){.cl-grid{grid-template-columns:1fr}.cl-card{position:static}.cl-list{max-height:50vh}}
+@media (max-width:560px){.cl-stats{grid-template-columns:1fr 1fr}.cl-visit{grid-template-columns:1fr}.cl-visits li{grid-template-columns:1fr auto;gap:2px 12px}.cv-what{grid-column:1/-1;order:-1}.cv-tag{grid-column:1}}
 
 /* Footer: dati dello studio e link privacy */
 .foot-link{color:#EDE2D6;text-underline-offset:3px}
@@ -655,25 +715,42 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
       </div>
 
       <div class="field">
-        <label for="f-name">Nome e cognome</label>
-        <input id="f-name" name="name" autocomplete="name" placeholder="Es. Maria Rossi">
-        <span class="err" id="e-name"></span>
+        <label for="f-nome">Nome</label>
+        <input id="f-nome" name="given-name" autocomplete="given-name" placeholder="Es. Maria" maxlength="40">
+        <span class="err" id="e-nome"></span>
+      </div>
+      <div class="field">
+        <label for="f-cognome">Cognome</label>
+        <input id="f-cognome" name="family-name" autocomplete="family-name" placeholder="Es. Rossi" maxlength="60">
+        <span class="err" id="e-cognome"></span>
       </div>
       <div class="field">
         <label for="f-phone">Cellulare</label>
         <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Es. 333 123 4567">
         <span class="err" id="e-phone"></span>
       </div>
+      <div class="field">
+        <label for="f-nascita">Data di nascita <small>(facoltativa)</small></label>
+        <input id="f-nascita" name="bday" type="date" autocomplete="bday" min="1920-01-01">
+        <span class="err" id="e-nascita"></span>
+      </div>
       <div class="field full">
         <label for="f-notes">Note <small>(facoltativo)</small></label>
         <textarea id="f-notes" name="notes" placeholder="Es. colore preferito, prima volta, mi ha presentata un'amica…"></textarea>
       </div>
 
+      <fieldset class="consents field full">
+        <legend class="lbl">Restiamo in contatto? <small>(facoltativo)</small></legend>
+        <label class="check"><input type="checkbox" id="f-promo"><span>Sì, voglio ricevere <b>promozioni e novità</b> dello studio su WhatsApp o SMS.</span></label>
+        <label class="check"><input type="checkbox" id="f-sumisura"><span>Sì, voglio ricevere <b>proposte su misura</b>, pensate in base ai trattamenti che ho fatto.</span></label>
+        <small class="consent-note">Puoi prenotare anche senza spuntarle, e cambiare idea quando vuoi scrivendo a Paola. Dettagli nell'<a href="#privacy">informativa privacy</a>.</small>
+      </fieldset>
+
       <div class="summary" id="summary" hidden></div>
 
       <div class="form-actions">
         <button class="btn btn-gold" type="submit" id="submitBtn">Conferma prenotazione</button>
-        <small id="privacyNote">Nome e cellulare li vede solo Paola, per contattarti in caso di imprevisti.</small>
+        <small id="privacyNote">I tuoi dati li vede solo Paola, per gestire i tuoi appuntamenti.</small>
       </div>
 
       <p class="legal-note">Inviando la richiesta dichiari di aver letto l'<a href="#privacy">informativa privacy</a>. Per favore non scrivere nelle note informazioni sulla salute: se ci sono allergie o esigenze particolari, ne parliamo in studio.</p>
@@ -682,7 +759,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
   </div>
 </section>
 
-<!-- Area riservata: login, agenda, registro di cassa, utenti, attività -->
+<!-- Area riservata: login, agenda, clienti, registro di cassa, utenti, attività -->
 <section class="area" id="riservata" hidden>
   <div class="wrap">
     <div class="area-head">
@@ -693,6 +770,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
       </div>
       <div class="seg" role="tablist" aria-label="Sezioni area riservata" id="areaTabs" hidden>
         <button type="button" role="tab" data-view="agenda" aria-selected="true">Agenda</button>
+        <button type="button" role="tab" data-view="clienti" aria-selected="false">Clienti</button>
         <button type="button" role="tab" data-view="cassa" aria-selected="false">Registro di cassa</button>
         <button type="button" role="tab" data-view="utenti" aria-selected="false" class="admin-only" hidden>Utenti</button>
         <button type="button" role="tab" data-view="attivita" aria-selected="false" class="admin-only" hidden>Attività</button>
@@ -720,7 +798,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 
     <!-- AGENDA -->
     <div class="view" id="view-agenda" hidden>
-      <div class="agenda-grid">
+      <div class="agenda-grid" id="agendaGrid">
         <form class="block-form" id="blockForm" novalidate>
           <p class="lbl">Blocca un orario</p>
           <div class="field full"><label for="b-date">Giorno</label><input id="b-date" type="date"></div>
@@ -737,6 +815,36 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
       </div>
     </div>
 
+    <!-- CLIENTI: schede, storico trattamenti e consensi -->
+    <div class="view" id="view-clienti" hidden>
+      <div class="cl-bar">
+        <input id="cl-q" type="search" placeholder="Cerca nome, cognome o telefono" aria-label="Cerca cliente" autocomplete="off">
+        <select id="cl-tr" aria-label="Filtra per trattamento fatto"><option value="">Tutti i trattamenti</option></select>
+        <select id="cl-last" aria-label="Filtra per ultima visita">
+          <option value="">Ultima visita</option>
+          <option value="30">Assente da 1+ mese</option>
+          <option value="60">Assente da 2+ mesi</option>
+          <option value="90">Assente da 3+ mesi</option>
+          <option value="180">Assente da 6+ mesi</option>
+        </select>
+        <select id="cl-cons" aria-label="Filtra per consenso">
+          <option value="">Consensi</option>
+          <option value="promo">Sì promozioni</option>
+          <option value="su_misura">Sì proposte su misura</option>
+          <option value="nessuno">Nessun consenso</option>
+        </select>
+        <button type="button" class="btn btn-gold btn-sm" id="cl-new">Nuova cliente</button>
+      </div>
+      <p class="cassa-status" id="cl-status" role="status" hidden></p>
+      <div class="cl-grid">
+        <div class="cl-side">
+          <div class="cl-meta"><span id="cl-count"></span><button type="button" class="link-btn" id="cl-csv">Lista per campagna</button></div>
+          <ul class="cl-list" id="cl-list"></ul>
+        </div>
+        <div class="cl-card" id="cl-card"><p class="hint">Scegli una cliente per vedere la sua scheda, oppure premi «Nuova cliente».</p></div>
+      </div>
+    </div>
+
     <!-- UTENTI (solo amministratore) -->
     <div class="view" id="view-utenti" hidden>
       <div class="admin-grid">
@@ -746,8 +854,8 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
         </table></div>
         <aside class="help-card">
           <p class="lbl">I ruoli</p>
-          <p><b>Amministratore</b> · tutto: agenda, cassa con eliminazione di qualsiasi movimento, utenti e registro delle attività.</p>
-          <p><b>Editor</b> · agenda e registro di cassa. Può eliminare solo i movimenti che ha inserito lei nella stessa giornata.</p>
+          <p><b>Amministratore</b> · tutto: agenda, clienti (anche eliminarle), cassa con eliminazione di qualsiasi movimento, utenti e registro delle attività.</p>
+          <p><b>Editor</b> · agenda, clienti e registro di cassa. Può eliminare solo i movimenti che ha inserito lei nella stessa giornata.</p>
           <p class="lbl" style="margin-top:8px">Aggiungere una persona</p>
           <p>Crea l'account in Supabase, in <i>Authentication → Users → Add user</i>, poi torna qui e assegnale un ruolo.</p>
         </aside>
@@ -756,7 +864,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 
     <!-- ATTIVITÀ (solo amministratore) -->
     <div class="view" id="view-attivita" hidden>
-      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
+      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, clienti, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
       <ol class="act-list" id="actList"></ol>
       <button type="button" class="btn btn-ghost" id="actMore" hidden>Carica altre</button>
     </div>
@@ -867,7 +975,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
     <article class="legal-doc">
       <p class="eyebrow">Informativa privacy e cookie</p>
       <h2>Come trattiamo i tuoi dati</h2>
-      <p class="legal-meta">Informativa ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR) · Ultimo aggiornamento: 28 ottobre 2026</p>
+      <p class="legal-meta">Informativa ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR) · Ultimo aggiornamento: 30 ottobre 2026</p>
 
       <h3>1. Titolare del trattamento</h3>
       <p><b>L'Estetique, Bellezza e Benessere di Paola Parisio</b><br>
@@ -879,7 +987,8 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 
       <h3>2. Quali dati raccogliamo</h3>
       <ul>
-        <li><b>Dati che ci dai tu per prenotare:</b> nome e cognome, numero di cellulare, trattamento scelto, giorno e ora dell'appuntamento ed eventuali note.</li>
+        <li><b>Dati che ci dai tu per prenotare:</b> nome, cognome, numero di cellulare, trattamento scelto, giorno e ora dell'appuntamento ed eventuali note. Se vuoi, anche la data di nascita.</li>
+        <li><b>La tua scheda cliente:</b> con questi dati creiamo una scheda, in cui teniamo lo storico dei trattamenti che fai da noi (prenotati dal sito o fatti in studio), i consensi che ci hai dato ed eventuali note dello studio sulle tue preferenze.</li>
         <li><b>Dati dei messaggi WhatsApp e delle telefonate</b> che ci invii per prenotare o chiedere informazioni.</li>
         <li><b>Dati di navigazione tecnici</b> (ad esempio indirizzo IP e tipo di browser) che il servizio di hosting del sito registra automaticamente per farlo funzionare e proteggerlo.</li>
       </ul>
@@ -891,16 +1000,19 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
           <thead><tr><th scope="col">Finalità</th><th scope="col">Base giuridica</th><th scope="col">Per quanto tempo</th></tr></thead>
           <tbody>
             <tr><td>Gestire la prenotazione, confermarla, spostarla o avvisarti di imprevisti</td><td>Esecuzione di misure precontrattuali e del contratto (art. 6.1.b GDPR)</td><td>Fino a 12 mesi dopo l'appuntamento</td></tr>
+            <tr><td>Tenere la tua scheda cliente con lo storico dei trattamenti, per seguirti meglio a ogni appuntamento</td><td>Esecuzione del contratto (art. 6.1.b GDPR)</td><td>Fino a 24 mesi dopo la tua ultima visita</td></tr>
+            <tr><td>Inviarti promozioni e novità dello studio su WhatsApp o SMS, se hai spuntato la relativa casella</td><td>Il tuo consenso (art. 6.1.a GDPR), facoltativo e revocabile</td><td>Fino a quando revochi il consenso, e comunque non oltre 24 mesi dalla tua ultima visita</td></tr>
+            <tr><td>Proporti trattamenti su misura, scelti in base a quelli che hai già fatto (profilazione), se hai spuntato la relativa casella</td><td>Il tuo consenso (art. 6.1.a GDPR), facoltativo e revocabile</td><td>Fino a quando revochi il consenso, e comunque non oltre 24 mesi dalla tua ultima visita</td></tr>
             <tr><td>Rispondere alle tue richieste di informazioni</td><td>Misure precontrattuali su tua richiesta (art. 6.1.b GDPR)</td><td>Il tempo necessario a risponderti, poi al massimo 12 mesi</td></tr>
             <tr><td>Adempimenti fiscali e contabili sui servizi pagati</td><td>Obbligo di legge (art. 6.1.c GDPR)</td><td>10 anni, come previsto dalla normativa fiscale</td></tr>
             <tr><td>Sicurezza e funzionamento tecnico del sito</td><td>Legittimo interesse del titolare (art. 6.1.f GDPR)</td><td>Secondo i tempi del fornitore di hosting, di norma pochi giorni</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Non usiamo i tuoi dati per pubblicità, non li vendiamo e non facciamo profilazione. Se in futuro volessimo inviarti promozioni, ti chiederemo prima un consenso specifico.</p>
+      <p>Promozioni e proposte su misura le riceverai solo se le hai chieste tu, spuntando le caselle nel modulo di prenotazione o dandoci il consenso in studio. Sono due consensi separati e facoltativi: puoi prenotare anche senza darli e puoi revocarli in qualsiasi momento scrivendo o telefonando ai recapiti del punto 1, senza conseguenze sui tuoi appuntamenti. La profilazione consiste solo nel guardare i trattamenti che hai fatto per proporti quelli più adatti a te: non prendiamo decisioni automatiche che ti riguardano. Non vendiamo i tuoi dati e non li cediamo a nessuno per fini pubblicitari.</p>
 
       <h3>4. Conferimento dei dati</h3>
-      <p>Nome e cellulare sono necessari per gestire la prenotazione: senza questi dati non possiamo fissare l'appuntamento. Le note sono facoltative.</p>
+      <p>Nome, cognome e cellulare sono necessari per gestire la prenotazione: senza questi dati non possiamo fissare l'appuntamento. La data di nascita, le note e i consensi per promozioni e proposte su misura sono facoltativi.</p>
 
       <h3>5. Chi può vedere i dati</h3>
       <ul>
@@ -919,6 +1031,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
         <li>cancellarli</li>
         <li>limitarne il trattamento</li>
         <li>opporti al trattamento basato sul legittimo interesse</li>
+        <li>revocare i consensi che ci hai dato</li>
         <li>riceverli in un formato leggibile (portabilità)</li>
       </ul>
       <p>Basta scriverci ai recapiti del punto 1: ti rispondiamo entro 30 giorni. Se ritieni che i tuoi dati siano trattati in modo non corretto puoi presentare reclamo al <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
@@ -1134,28 +1247,35 @@ function setMode(mode) {
   state.mode = mode;
   $('submitBtn').textContent = mode === 'live' ? 'Conferma prenotazione' : 'Invia richiesta su WhatsApp';
   $('privacyNote').textContent = mode === 'live'
-    ? 'Nome e cellulare li vede solo Paola, per contattarti in caso di imprevisti.'
+    ? 'I tuoi dati li vede solo Paola, per gestire i tuoi appuntamenti.'
     : 'Il messaggio con giorno e ora si apre su WhatsApp: Paola ti risponde con la conferma.';
 }
 
 /* Invio */
 function waText(extra) {
-  const lines = [`Ciao Paola, sono ${$('f-name').value.trim()}.`, extra, '',
+  const lines = [`Ciao Paola, sono ${fullName()}.`, extra, '',
     `• Trattamento: ${state.picked.map(t => t.name).join(' + ')}`,
     `• Giorno: ${longDate(state.day)}`,
     `• Ora: ${hm(state.time)} (durata stimata ${dur(totalMin())})`,
     `• Cellulare: ${$('f-phone').value.trim()}`];
+  const nb = $('f-nascita').value; if (nb) lines.push(`• Data di nascita: ${nb.split('-').reverse().join('/')}`);
   const n = $('f-notes').value.trim(); if (n) lines.push(`• Note: ${n}`);
+  if ($('f-promo').checked) lines.push('• Sì alle promozioni e novità');
+  if ($('f-sumisura').checked) lines.push('• Sì alle proposte su misura');
   lines.push('', 'Grazie!');
   return lines.join('\n');
 }
+function fullName() { return `${$('f-nome').value.trim()} ${$('f-cognome').value.trim()}`.trim(); }
 function waLink(text) { return `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`; }
 function validate() {
   let ok = true;
   const set = (id, msg) => { $(id).textContent = msg; if (msg) ok = false; };
   set('e-treat', state.picked.length ? '' : 'Scegli almeno un trattamento.');
   set('e-time', state.day && state.time != null ? '' : 'Scegli giorno e orario.');
-  set('e-name', $('f-name').value.trim() ? '' : 'Scrivi il tuo nome.');
+  set('e-nome', $('f-nome').value.trim() ? '' : 'Scrivi il tuo nome.');
+  set('e-cognome', $('f-cognome').value.trim() ? '' : 'Scrivi il tuo cognome.');
+  const nb = $('f-nascita').value;
+  set('e-nascita', !nb || (nb >= '1920-01-01' && nb <= todayIso()) ? '' : 'Controlla la data di nascita.');
   set('e-phone', $('f-phone').value.replace(/\D/g, '').length >= 8 ? '' : 'Serve un numero di cellulare valido.');
   return ok;
 }
@@ -1177,7 +1297,7 @@ $('bookForm').addEventListener('submit', async e => {
       <p><b>${longDate(booking.date)}, ore ${hm(booking.start)}</b><br>${esc(booking.treatments.join(' + '))}</p>
       <p class="small">È già nell'agenda di Paola. Se vuoi, avvisala anche su WhatsApp.</p>
       <div class="c-actions"><a class="btn btn-wa" href="${waLink(text)}" target="_blank" rel="noopener">${WA_ICON}Avvisa Paola</a></div>`);
-    state.picked = []; state.time = null; $('f-notes').value = ''; renderPicked();
+    state.picked = []; state.time = null; $('f-notes').value = ''; $('f-promo').checked = $('f-sumisura').checked = false; renderPicked();
   } catch (err) {
     if (err && err.code === 'taken') {
       $('e-time').textContent = 'Questo orario è appena stato preso. Scegline un altro.';
@@ -1196,7 +1316,11 @@ $('bookForm').addEventListener('submit', async e => {
 async function book() {
   const date = state.day, start = state.time, dur = totalMin();
   const treatments = state.picked.map(t => t.name), price = state.picked.reduce((s, t) => s + t.price, 0);
-  const { data, error } = await sb.rpc('book', { p_day: date, p_start: start, p_duration: dur, p_name: $('f-name').value.trim(), p_phone: $('f-phone').value.trim(), p_treatments: treatments, p_price: price, p_notes: $('f-notes').value.trim() });
+  const base = { p_day: date, p_start: start, p_duration: dur, p_phone: $('f-phone').value.trim(), p_treatments: treatments, p_price: price, p_notes: $('f-notes').value.trim() };
+  let { data, error } = await sb.rpc('prenota', { ...base, p_nome: $('f-nome').value.trim(), p_cognome: $('f-cognome').value.trim(), p_nascita: $('f-nascita').value || null, p_promo: $('f-promo').checked, p_su_misura: $('f-sumisura').checked });
+  if (error && /PGRST202|Could not find the function/i.test((error.code || '') + ' ' + (error.message || ''))) {
+    ({ data, error } = await sb.rpc('book', { ...base, p_name: fullName() }));   // database non ancora aggiornato
+  }
   if (error) {
     const m = error.message || '';
     if (m.includes('orario_occupato')) throw { code: 'taken' };
@@ -1267,7 +1391,7 @@ function route() {
 addEventListener('hashchange', route);
 
 function setLocked(title, text) { $('locked').hidden = false; $('lockedTitle').textContent = title; $('lockedText').textContent = text; }
-const VIEWS = ['agenda', 'cassa', 'utenti', 'attivita'];
+const VIEWS = ['agenda', 'clienti', 'cassa', 'utenti', 'attivita'];
 function renderArea() {
   if (!area.ok) return;
   if (area.role !== 'admin' && (area.view === 'utenti' || area.view === 'attivita')) area.view = 'agenda';
@@ -1275,7 +1399,10 @@ function renderArea() {
   document.querySelectorAll('#areaTabs .admin-only').forEach(b => { b.hidden = area.role !== 'admin'; });
   [...$('areaTabs').children].forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === area.view)));
   VIEWS.forEach(v => { $('view-' + v).hidden = area.view !== v; });
+  // l'amministratore non blocca orari: vede solo l'elenco degli appuntamenti
+  $('blockForm').hidden = area.role === 'admin'; $('agendaGrid').classList.toggle('no-form', area.role === 'admin');
   if (area.view === 'agenda') renderAgenda();
+  else if (area.view === 'clienti') loadClienti();
   else if (area.view === 'cassa') renderCassa();
   else if (area.view === 'utenti') loadUsers();
   else loadActivity(true);
@@ -1303,12 +1430,15 @@ function renderAgenda() {
       : det ? `<b>${esc(det.name)}</b><span>${esc((det.treatments || []).join(' + '))} · €${det.price}</span><span class="sel">${esc(det.phone)}</span>${det.notes ? `<span class="note">${esc(det.notes)}</span>` : ''}`
       : '<b>Prenotazione dal sito</b>';
     const time = s.start === 0 && s.end >= 1440 ? 'Tutto il giorno' : `${hm(s.start)} – ${hm(s.end)}`;
+    const scheda = det && det.cliente_id ? `<button type="button" class="link-btn" data-scheda="${det.cliente_id}">Scheda</button>` : '';
     const wa = det ? `<a class="link-btn" href="https://wa.me/${intl(det.phone)}" target="_blank" rel="noopener">WhatsApp</a>` : '';
     const cash = det ? (det.incassato ? '<span class="link-btn ag-cash" style="text-decoration:none">Incassato ✓</span>' : `<button type="button" class="link-btn" data-cash="${s.id}">Registra incasso</button>`) : '';
-    return `<li><span class="ag-time">${time}</span><div class="ag-who">${who}</div><div class="ag-act">${cash}${wa}<button type="button" class="link-btn" data-del="${s.id}">${s.kind === 'block' ? 'Sblocca' : 'Annulla'}</button></div></li>`;
+    return `<li><span class="ag-time">${time}</span><div class="ag-who">${who}</div><div class="ag-act">${cash}${scheda}${wa}<button type="button" class="link-btn" data-del="${s.id}">${s.kind === 'block' ? 'Sblocca' : 'Annulla'}</button></div></li>`;
   }).join('')}</ul></div>`).join('');
 }
 $('agendaList').addEventListener('click', async e => {
+  const sc = e.target.closest('[data-scheda]');
+  if (sc) { cl.sel = sc.dataset.scheda; cl.isNew = false; area.view = 'clienti'; renderArea(); window.scrollTo(0, 0); return; }
   const c = e.target.closest('[data-cash]');
   if (c) {
     const det = area.bookings[c.dataset.cash]; if (!det) return;
@@ -1630,6 +1760,14 @@ function describe(a) {
     if (d.incassato && !o.incassato) return `Ha registrato l'incasso della prenotazione di ${b}`;
     return `Ha modificato la prenotazione di ${b}`;
   }
+  if (a.entity === 'clienti') {
+    if (a.action === 'insert') return `Nuova scheda cliente: ${esc(x.nome)} ${esc(x.cognome)}${x.origine === 'sito' ? ' (prima prenotazione dal sito)' : ''}`;
+    return `Ha eliminato la scheda di ${esc(x.nome)} ${esc(x.cognome)}`;
+  }
+  if (a.entity === 'visite') {
+    const c = cl.list.find(k => k.id === x.cliente_id), who = c ? ` di ${esc(c.nome)} ${esc(c.cognome)}` : '';
+    return `${a.action === 'insert' ? 'Ha aggiunto allo storico' : 'Ha tolto dallo storico'}${who}: ${esc((x.treatments || []).join(' + '))} del ${shortD(x.day)}`;
+  }
   if (a.entity === 'staff') {
     const who = esc(emailOf(x.user_id));
     if (a.action === 'delete') return `Ha tolto l'accesso a ${who}`;
@@ -1647,12 +1785,241 @@ async function loadActivity(reset) {
   $('actMore').hidden = data.length < 50;
   $('actList').innerHTML = act.rows.length ? act.rows.map(a => {
     const when = new Date(a.at).toLocaleString('it-IT', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-    const who = a.email || (a.entity === 'bookings' ? 'Cliente dal sito' : 'Sistema');
+    const who = a.email || (a.entity === 'bookings' || a.entity === 'clienti' ? 'Cliente dal sito' : 'Sistema');
     return `<li class="act-${a.entity}"><span class="act-when">${when}</span><span class="act-who">${esc(who)}</span><span class="act-what">${describe(a)}</span></li>`;
   }).join('') : '<li class="cap-note">Ancora nessuna attività registrata.</li>';
 }
 $('actMore').addEventListener('click', () => loadActivity(false));
 $('actReload').addEventListener('click', () => loadActivity(true));
+
+/* ===== area-riservata/clienti.js ===== */
+/* ---------- Clienti: schede, storico trattamenti e consensi ---------- */
+const cl = { list: [], hist: [], sel: null, isNew: false, picked: [] };
+const fmtD = d => d ? parseIso(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+const daysAgo = d => Math.round((parseIso(todayIso()) - parseIso(d)) / 864e5);
+const normTel = p => String(p || '').replace(/\D/g, '').replace(/^(00)?39(?=\d{9,10}$)/, '');
+const plur = (n, uno, tanti) => `${n} ${n === 1 ? uno : tanti}`;
+const LISTINO_NAMES = new Set(TREATS.map(t => t.name));
+const priceOf = n => { const t = TREATS.find(x => x.name === n); return t ? t.price : 0; };
+const treatOptions = (first, extra = []) => `<option value="">${first}</option>` + LISTINO.map(c =>
+  `<optgroup label="${esc(c.name)}">${[...new Set(c.groups.flatMap(g => g.items).map(x => x.name))].map(n => `<option>${esc(n)}</option>`).join('')}</optgroup>`).join('')
+  + (extra.length ? `<optgroup label="Altri">${extra.map(n => `<option>${esc(n)}</option>`).join('')}</optgroup>` : '');
+
+function clStatus(text) { const s = $('cl-status'); s.hidden = !text; s.textContent = text || ''; }
+
+async function loadClienti() {
+  const [c, h] = await Promise.all([
+    sb.from('clienti').select('*').order('cognome').order('nome'),
+    sb.from('storico_clienti').select('id,cliente_id,day,treatments,price,origine,created_by').order('day', { ascending: false })
+  ]);
+  if (c.error || h.error) {
+    cl.list = []; cl.hist = [];
+    clStatus('Le schede clienti non sono ancora attive: va aggiornato il database (file 5-clienti.sql).');
+    $('cl-list').innerHTML = ''; $('cl-count').textContent = ''; $('cl-new').disabled = true; renderCard(); return;
+  }
+  clStatus(''); $('cl-new').disabled = false;
+  cl.list = c.data; cl.hist = h.data.map(r => ({ ...r, price: Number(r.price) }));
+  buildStats(); fillTreatFilter(); renderClienti();
+}
+function buildStats() {
+  const today = todayIso(), by = {};
+  cl.hist.forEach(r => (by[r.cliente_id] ||= []).push(r));
+  cl.list.forEach(c => {
+    const h = by[c.id] || [], past = h.filter(r => r.day <= today), fut = h.filter(r => r.day > today);
+    const count = {}; past.forEach(r => r.treatments.forEach(t => { count[t] = (count[t] || 0) + 1; }));
+    Object.assign(c, {
+      _hist: h, _n: past.length, _tot: past.reduce((s, r) => s + r.price, 0),
+      _last: past.length ? past.map(r => r.day).sort().pop() : null,
+      _next: fut.length ? fut.map(r => r.day).sort()[0] : null,
+      _tr: new Set(h.flatMap(r => r.treatments)),
+      _fav: Object.entries(count).sort((a, b) => b[1] - a[1])[0] || null
+    });
+  });
+}
+function fillTreatFilter() {
+  const sel = $('cl-tr'), cur = sel.value;
+  const extra = [...new Set(cl.hist.flatMap(r => r.treatments))].filter(n => !LISTINO_NAMES.has(n)).sort((a, b) => a.localeCompare(b, 'it'));
+  sel.innerHTML = treatOptions('Tutti i trattamenti', extra);
+  sel.value = cur;
+}
+const historyFilter = () => !!($('cl-tr').value || $('cl-last').value);
+function clFiltered() {
+  const q = $('cl-q').value.trim().toLowerCase(), qd = q.replace(/\D/g, '');
+  const tr = $('cl-tr').value, last = +$('cl-last').value, cons = $('cl-cons').value;
+  return cl.list.filter(c => {
+    if (q) {
+      const hay = `${c.nome} ${c.cognome} ${c.nome}`.toLowerCase();
+      if (!hay.includes(q) && !(qd.length >= 3 && qd.length === q.replace(/\s/g, '').length && normTel(c.telefono).includes(qd))) return false;
+    }
+    if (tr && !c._tr.has(tr)) return false;
+    if (last && (!c._last || c._next || daysAgo(c._last) <= last)) return false;
+    if (cons === 'promo' && !c.consenso_promo) return false;
+    if (cons === 'su_misura' && !c.consenso_su_misura) return false;
+    if (cons === 'nessuno' && (c.consenso_promo || c.consenso_su_misura)) return false;
+    return true;
+  });
+}
+const reachable = c => historyFilter() ? c.consenso_su_misura : c.consenso_promo;
+function renderClienti() {
+  const rows = clFiltered(), ok = rows.filter(reachable).length;
+  $('cl-count').textContent = cl.list.length ? `${plur(rows.length, 'cliente', 'clienti')} · ${ok} contattabili` : '';
+  $('cl-csv').title = historyFilter()
+    ? 'Filtri su trattamenti o visite: nella lista vanno solo le clienti con il consenso alle proposte su misura'
+    : 'Nella lista vanno solo le clienti con il consenso alle promozioni';
+  $('cl-list').innerHTML = rows.length ? rows.map(c => {
+    const sub = c._next ? `Prossimo appuntamento ${fmtD(c._next)}` : c._last ? `Ultima visita ${fmtD(c._last)}` : 'Nessuna visita';
+    return `<li><button type="button" data-id="${c.id}" aria-current="${cl.sel === c.id && !cl.isNew}">
+      <span class="cl-name"><b>${esc(c.cognome)}</b> ${esc(c.nome)}</span>
+      <span class="cl-sub">${sub} · ${plur(c._n, 'visita', 'visite')}</span>
+      <span class="cl-tags">${c.consenso_promo ? '<i title="Consenso promozioni">Promo</i>' : ''}${c.consenso_su_misura ? '<i title="Consenso proposte su misura">Su misura</i>' : ''}</span></button></li>`;
+  }).join('') : `<li class="cap-note">${cl.list.length ? 'Nessuna cliente con questi filtri.' : 'Ancora nessuna cliente. Le schede si creano da sole con le prenotazioni dal sito, oppure con «Nuova cliente».'}</li>`;
+  renderCard();
+}
+function renderCard() {
+  const el = $('cl-card');
+  const c = cl.isNew ? { id: null, nome: '', cognome: '', telefono: '', nascita: null, consenso_promo: false, consenso_su_misura: false, note: '', _hist: [], _n: 0 }
+    : cl.list.find(x => x.id === cl.sel);
+  if (!c) { el.innerHTML = '<p class="hint">Scegli una cliente per vedere la sua scheda, oppure premi «Nuova cliente».</p>'; return; }
+  const since = c.created_at ? `Cliente dal ${fmtD(c.created_at.slice(0, 10))} · ${c.origine === 'sito' ? 'prima prenotazione dal sito' : 'inserita in studio'}` : 'Compila i dati e salva: poi potrai aggiungere i trattamenti.';
+  const consAt = at => at ? ` <small>· dal ${fmtD(at.slice(0, 10))}</small>` : '';
+  const bday = c.nascita ? parseIso(c.nascita).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' }) : '—';
+  const hist = c._hist.slice().sort((a, b) => b.day.localeCompare(a.day));
+  el.innerHTML = `
+    <div class="cl-head">
+      <div><p class="eyebrow">${cl.isNew ? 'Nuova cliente' : 'Scheda cliente'}</p><h3>${cl.isNew ? 'Nuova cliente' : esc(c.nome + ' ' + c.cognome)}</h3><p class="cap-note">${since}</p></div>
+      ${cl.isNew ? '' : `<a class="btn btn-wa btn-sm" href="https://wa.me/${intl(c.telefono)}" target="_blank" rel="noopener">${WA_ICON}WhatsApp</a>`}
+    </div>
+    ${cl.isNew ? '' : `<div class="cl-stats">
+      <div><b>${c._n}</b><span>${c._n === 1 ? 'visita' : 'visite'}</span></div>
+      <div><b>€${c._tot.toLocaleString('it-IT')}</b><span>totale</span></div>
+      <div><b>${c._fav ? esc(c._fav[0]) : '—'}</b><span>il più fatto</span></div>
+      <div><b>${bday}</b><span>compleanno</span></div></div>`}
+    <form class="cl-form" id="cl-form" novalidate>
+      <div class="field"><label for="c-nome">Nome</label><input id="c-nome" value="${esc(c.nome)}" maxlength="40" autocomplete="off"></div>
+      <div class="field"><label for="c-cognome">Cognome</label><input id="c-cognome" value="${esc(c.cognome === '-' ? '' : c.cognome)}" maxlength="60" autocomplete="off"></div>
+      <div class="field"><label for="c-tel">Cellulare</label><input id="c-tel" type="tel" inputmode="tel" value="${esc(c.telefono)}" autocomplete="off"></div>
+      <div class="field"><label for="c-nascita">Data di nascita</label><input id="c-nascita" type="date" value="${c.nascita || ''}" min="1920-01-01" max="${todayIso()}"></div>
+      <fieldset class="consents field full">
+        <legend class="lbl">Consensi</legend>
+        <label class="check"><input type="checkbox" id="c-promo" ${c.consenso_promo ? 'checked' : ''}><span>Promozioni e novità${consAt(c.consenso_promo_at)}</span></label>
+        <label class="check"><input type="checkbox" id="c-sumisura" ${c.consenso_su_misura ? 'checked' : ''}><span>Proposte su misura in base ai trattamenti${consAt(c.consenso_su_misura_at)}</span></label>
+        <small class="consent-note">Spunta solo se è la cliente a chiederlo (meglio se per iscritto). Se ci ripensa, togli la spunta.</small>
+      </fieldset>
+      <div class="field full"><label for="c-note">Note <small>(solo per lo studio)</small></label><textarea id="c-note" maxlength="500" placeholder="Preferenze, colori, cose da ricordare. Niente dati sulla salute.">${esc(c.note || '')}</textarea></div>
+      <span class="err" id="e-cl"></span>
+      <div class="form-actions"><button class="btn btn-gold" type="submit" id="cl-save">${cl.isNew ? 'Crea scheda' : 'Salva modifiche'}</button>
+        ${cl.isNew ? '<button type="button" class="link-btn" id="cl-cancel">Annulla</button>' : area.role === 'admin' ? '<button type="button" class="link-btn cl-del" id="cl-del">Elimina cliente</button>' : ''}</div>
+    </form>
+    ${cl.isNew ? '' : `<div class="cl-hist">
+      <p class="lbl">Storico trattamenti</p>
+      <form class="cl-visit" id="cl-visit" novalidate>
+        <div class="field"><label for="v-date">Giorno</label><input id="v-date" type="date" value="${todayIso()}" max="${todayIso()}"></div>
+        <div class="field"><label for="v-treat">Trattamento</label><select id="v-treat">${treatOptions('Aggiungi un trattamento…')}</select></div>
+        <ul class="picked full" id="v-picked"></ul>
+        <div class="field"><label for="v-price">Importo (€)</label><input id="v-price" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+        <div class="field v-go"><button class="btn btn-ghost btn-sm" type="submit">Aggiungi allo storico</button></div>
+        <span class="err full" id="e-visit"></span>
+      </form>
+      <ul class="cl-visits">${hist.length ? hist.map(r => {
+        const canDel = r.origine === 'studio' && (area.role === 'admin' || r.created_by === area.uid);
+        const fut = r.day > todayIso();
+        return `<li><span class="cv-day">${fmtD(r.day)}</span><span class="cv-what">${esc(r.treatments.join(' + '))}</span><span class="cv-p">€${r.price.toLocaleString('it-IT')}</span>
+          <span class="cv-tag ${fut ? 'fut' : ''}">${fut ? 'in programma' : r.origine === 'sito' ? 'dal sito' : 'in studio'}</span>${canDel ? `<button type="button" class="link-btn" data-vdel="${r.id}">Togli</button>` : '<span></span>'}</li>`;
+      }).join('') : '<li class="cap-note">Ancora nessun trattamento registrato.</li>'}</ul>
+    </div>`}`;
+  cl.picked = []; renderVisitPicked();
+}
+function renderVisitPicked() {
+  const ul = $('v-picked'); if (!ul) return;
+  ul.innerHTML = cl.picked.map((n, i) => `<li><span>${esc(n)}</span><button type="button" aria-label="Togli ${esc(n)}" data-i="${i}">×</button></li>`).join('');
+  $('v-price').value = cl.picked.length ? String(cl.picked.reduce((s, n) => s + priceOf(n), 0)) : '';
+}
+
+/* filtri ed elenco */
+['cl-q', 'cl-tr', 'cl-last', 'cl-cons'].forEach(id => $(id).addEventListener('input', renderClienti));
+$('cl-new').addEventListener('click', () => { cl.isNew = true; cl.sel = null; renderClienti(); $('c-nome').focus(); });
+$('cl-list').addEventListener('click', e => {
+  const b = e.target.closest('[data-id]'); if (!b) return;
+  cl.sel = b.dataset.id; cl.isNew = false; renderClienti();
+  if (matchMedia('(max-width: 900px)').matches) $('cl-card').scrollIntoView({ block: 'start' });
+});
+
+/* scheda: salva, elimina, storico */
+$('cl-card').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (e.target.id === 'cl-form') return saveCliente();
+  if (e.target.id === 'cl-visit') return addVisit();
+});
+$('cl-card').addEventListener('change', e => {
+  if (e.target.id === 'v-treat' && e.target.value) {
+    if (cl.picked.length >= 8) { $('e-visit').textContent = 'Massimo 8 trattamenti per volta.'; return; }
+    cl.picked.push(e.target.value); e.target.value = ''; $('e-visit').textContent = ''; renderVisitPicked();
+  }
+});
+$('cl-card').addEventListener('click', async e => {
+  const x = e.target.closest('#v-picked button[data-i]');
+  if (x) { cl.picked.splice(+x.dataset.i, 1); renderVisitPicked(); return; }
+  if (e.target.id === 'cl-cancel') { cl.isNew = false; renderClienti(); return; }
+  const del = e.target.closest('#cl-del, [data-vdel]'); if (!del) return;
+  if (del.dataset.armed !== '1') { del.dataset.armed = '1'; del.textContent = 'Confermi?'; return; }
+  del.disabled = true;
+  if (del.id === 'cl-del') {
+    const { error } = await sb.rpc('elimina_cliente', { p_id: cl.sel });
+    if (error) { del.disabled = false; say('Non sono riuscita a eliminare la scheda'); return; }
+    cl.sel = null; say('Scheda eliminata'); await loadClienti(); loadAgendaDetails();
+  } else {
+    const { error } = await sb.from('visite').delete().eq('id', del.dataset.vdel);
+    if (error) { del.disabled = false; say('Operazione non riuscita, riprova.'); return; }
+    say('Tolto dallo storico'); await loadClienti();
+  }
+});
+async function saveCliente() {
+  const val = id => $(id).value.trim();
+  const f = { nome: val('c-nome'), cognome: val('c-cognome'), telefono: val('c-tel'), nascita: $('c-nascita').value || null,
+    consenso_promo: $('c-promo').checked, consenso_su_misura: $('c-sumisura').checked, note: val('c-note') || null };
+  const err = m => { $('e-cl').textContent = m; };
+  if (!f.nome || !f.cognome) return err('Scrivi nome e cognome.');
+  if (normTel(f.telefono).length < 8) return err('Serve un numero di cellulare valido.');
+  if (f.nascita && (f.nascita < '1920-01-01' || f.nascita > todayIso())) return err('Controlla la data di nascita.');
+  const dup = cl.list.find(c => c.id !== cl.sel && normTel(c.telefono) === normTel(f.telefono));
+  if (dup) return err(`Questo numero è già nella scheda di ${dup.nome} ${dup.cognome}.`);
+  err(''); $('cl-save').disabled = true;
+  const r = cl.isNew
+    ? await sb.from('clienti').insert({ ...f, origine: 'studio' }).select('id').single()
+    : await sb.from('clienti').update(f).eq('id', cl.sel).select('id').single();
+  $('cl-save').disabled = false;
+  if (r.error) return err(r.error.code === '23505' ? 'Questo numero è già nella scheda di un\'altra cliente.' : 'Non sono riuscita a salvare. Riprova.');
+  const wasNew = cl.isNew;
+  cl.sel = r.data.id; cl.isNew = false;
+  say(wasNew ? 'Scheda creata' : 'Scheda salvata');
+  await loadClienti(); loadAgendaDetails();
+}
+async function addVisit() {
+  const day = $('v-date').value, price = parseAmt($('v-price').value || '0') / 100;
+  const err = m => { $('e-visit').textContent = m; };
+  if (!day || day > todayIso()) return err('Scegli il giorno (non nel futuro).');
+  if (!cl.picked.length) return err('Scegli almeno un trattamento.');
+  if (!(price >= 0)) return err('Scrivi un importo valido, ad esempio 18 o 18,50.');
+  err('');
+  const { error } = await sb.from('visite').insert({ cliente_id: cl.sel, day, treatments: cl.picked, price });
+  if (error) return err('Non sono riuscita a salvare. Riprova.');
+  say('Aggiunto allo storico'); await loadClienti();
+}
+
+/* lista per campagna: solo chi ha dato il consenso giusto */
+$('cl-csv').addEventListener('click', () => {
+  const rows = clFiltered(), ok = rows.filter(reachable);
+  if (!ok.length) { say(rows.length ? 'Nessuna cliente con il consenso necessario in questa lista' : 'Nessuna cliente in questa lista'); return; }
+  const d = s => s ? s.split('-').reverse().join('/') : '';
+  const cell = s => `"${String(s ?? '').replace(/"/g, '""')}"`;
+  const csv = 'Nome;Cognome;Cellulare;Data di nascita;Ultima visita;Trattamenti fatti\n' + ok.map(c =>
+    [c.nome, c.cognome, c.telefono, d(c.nascita), d(c._last), [...c._tr].join(', ')].map(cell).join(';')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = `Campagna-${todayIso()}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const out = rows.length - ok.length;
+  say(`Lista di ${plur(ok.length, 'cliente', 'clienti')}` + (out ? ` (${out} senza consenso escluse)` : ''));
+});
 
 /* ===== hero/hero.js ===== */
 /* ---------- Hero: prima disponibilità ---------- */
@@ -1696,6 +2063,7 @@ setInterval(renderHeroNext, 60000);
 /* ---------- Avvio ---------- */
 renderPicked();
 $('b-date').value = todayIso(); $('b-date').min = todayIso();
+$('f-nascita').max = todayIso();
 $('m-date').value = todayIso(); $('m-date').max = todayIso();
 setType('entrata');
 setMode('whatsapp'); setStatus('warn', 'Orari indicativi: Paola conferma su WhatsApp');
@@ -1731,7 +2099,9 @@ async function refreshSlots() {
   }
 }
 async function loadAgendaDetails() {
-  const { data, error } = await sb.from('bookings').select('id,slot_id,day,start_min,name,phone,treatments,price,notes,status,incassato').gte('day', todayIso());
+  const cols = 'id,slot_id,day,start_min,name,phone,treatments,price,notes,status,incassato';
+  let { data, error } = await sb.from('bookings').select(cols + ',cliente_id').gte('day', todayIso());
+  if (error) ({ data, error } = await sb.from('bookings').select(cols).gte('day', todayIso()));   // database non ancora aggiornato
   if (error) return;
   area.bookings = {};
   data.forEach(b => { if (b.slot_id) area.bookings[b.slot_id] = { ...b, date: b.day, start: b.start_min, price: Number(b.price) }; });
