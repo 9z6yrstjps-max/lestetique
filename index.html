@@ -426,6 +426,27 @@ body.legal .nav .back{display:inline-flex}
 .login-form .link-btn{align-self:center;text-transform:none;letter-spacing:0;font-weight:500;font-size:.85rem}
 .logout{margin-top:8px;text-transform:none;letter-spacing:0;font-weight:500;font-size:.85rem}
 
+.role-note{margin:6px 0 0;font-size:.85rem;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.role-note .logout{margin:0}
+.admin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:28px;align-items:start}
+.users{width:100%;border-collapse:collapse;font-size:.92rem;min-width:520px}
+.users th,.users td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+.users th{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+.users tr:last-child td{border-bottom:0}
+.users select{width:auto;min-width:170px;padding:8px 12px}
+.users .tag{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;background:var(--blush);color:var(--rose);border-radius:999px;padding:2px 8px;margin-left:6px}
+.help-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px;font-size:.88rem}
+.help-card p{margin:0;color:var(--ink-soft)} .help-card b{color:var(--ink)}
+.act-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.act-list{list-style:none;margin:0 0 18px;padding:0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.act-list li{display:grid;grid-template-columns:130px 180px minmax(0,1fr);gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);font-size:.88rem;align-items:baseline}
+.act-list li:last-child{border-bottom:0}
+.act-when{color:var(--ink-soft);font-variant-numeric:tabular-nums lining-nums}
+.act-who{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.act-cassa .act-what{color:var(--ink)} .act-bookings .act-who{color:var(--rose)}
+@media (max-width:860px){.admin-grid{grid-template-columns:1fr}.act-list li{grid-template-columns:1fr;gap:2px}}
+#areaTabs{flex-wrap:wrap;border-radius:22px}
+
 /* contatti */
 .c-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
 .link-btn{font:inherit;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--rose);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rose-light)}
@@ -648,12 +669,14 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
     <div class="area-head">
       <div>
         <p class="eyebrow">Area riservata</p>
-        <h2 id="areaTitle">Ciao Paola</h2>
-        <button class="link-btn logout" type="button" id="logoutBtn" hidden>Esci</button>
+        <h2 id="areaTitle">Area riservata</h2>
+        <p class="role-note"><span id="roleNote"></span> <button class="link-btn logout" type="button" id="logoutBtn" hidden>Esci</button></p>
       </div>
       <div class="seg" role="tablist" aria-label="Sezioni area riservata" id="areaTabs" hidden>
         <button type="button" role="tab" data-view="agenda" aria-selected="true">Agenda</button>
         <button type="button" role="tab" data-view="cassa" aria-selected="false">Registro di cassa</button>
+        <button type="button" role="tab" data-view="utenti" aria-selected="false" class="admin-only" hidden>Utenti</button>
+        <button type="button" role="tab" data-view="attivita" aria-selected="false" class="admin-only" hidden>Attività</button>
       </div>
     </div>
 
@@ -693,6 +716,30 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
         </form>
         <div class="agenda-list" id="agendaList"></div>
       </div>
+    </div>
+
+    <!-- UTENTI (solo amministratore) -->
+    <div class="view" id="view-utenti" hidden>
+      <div class="admin-grid">
+        <div class="table-wrap"><table class="users">
+          <thead><tr><th scope="col">Account</th><th scope="col">Ultimo accesso</th><th scope="col">Ruolo</th></tr></thead>
+          <tbody id="usersBody"><tr><td colspan="3" class="cap-note">Carico gli utenti…</td></tr></tbody>
+        </table></div>
+        <aside class="help-card">
+          <p class="lbl">I ruoli</p>
+          <p><b>Amministratore</b> · tutto: agenda, cassa con eliminazione di qualsiasi movimento, utenti e registro delle attività.</p>
+          <p><b>Editor</b> · agenda e registro di cassa. Può eliminare solo i movimenti che ha inserito lei nella stessa giornata.</p>
+          <p class="lbl" style="margin-top:8px">Aggiungere una persona</p>
+          <p>Crea l'account in Supabase, in <i>Authentication → Users → Add user</i>, poi torna qui e assegnale un ruolo.</p>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ATTIVITÀ (solo amministratore) -->
+    <div class="view" id="view-attivita" hidden>
+      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
+      <ol class="act-list" id="actList"></ol>
+      <button type="button" class="btn btn-ghost" id="actMore" hidden>Carica altre</button>
     </div>
 
     <!-- CASSA -->
@@ -1171,7 +1218,7 @@ $('mineList').addEventListener('click', async e => {
 });
 
 /* ================= Area riservata ================= */
-const area = { ok: false, view: 'agenda', cv: 'mese', bookings: {}, cassa: {}, month: todayIso().slice(0, 7), year: 'tutto', type: 'entrata', downloads: null };
+const area = { ok: false, role: null, uid: null, email: '', view: 'agenda', cv: 'mese', bookings: {}, cassa: {}, month: todayIso().slice(0, 7), year: 'tutto', type: 'entrata', downloads: null };
 const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
 const CAT_IN = ['Mani e piedi', 'Viso', 'Corpo', 'Altro'];
 const CAT_OUT = ['Prodotti', 'Affitto', 'Attrezzatura', 'Utenze', 'Formazione', 'Tasse e contributi', 'Altro'];
@@ -1194,13 +1241,18 @@ function route() {
 addEventListener('hashchange', route);
 
 function setLocked(title, text) { $('locked').hidden = false; $('lockedTitle').textContent = title; $('lockedText').textContent = text; }
+const VIEWS = ['agenda', 'cassa', 'utenti', 'attivita'];
 function renderArea() {
   if (!area.ok) return;
+  if (area.role !== 'admin' && (area.view === 'utenti' || area.view === 'attivita')) area.view = 'agenda';
   $('locked').hidden = true; $('areaTabs').hidden = false;
+  document.querySelectorAll('#areaTabs .admin-only').forEach(b => { b.hidden = area.role !== 'admin'; });
   [...$('areaTabs').children].forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === area.view)));
-  $('view-agenda').hidden = area.view !== 'agenda';
-  $('view-cassa').hidden = area.view !== 'cassa';
-  if (area.view === 'agenda') renderAgenda(); else renderCassa();
+  VIEWS.forEach(v => { $('view-' + v).hidden = area.view !== v; });
+  if (area.view === 'agenda') renderAgenda();
+  else if (area.view === 'cassa') renderCassa();
+  else if (area.view === 'utenti') loadUsers();
+  else loadActivity(true);
 }
 $('areaTabs').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (b) { area.view = b.dataset.view; renderArea(); } });
 
@@ -1370,7 +1422,7 @@ function renderMese() {
     return `<div class="mv-day"><h4><span>${longDate(d)}</span><span>${money(ds.s)}</span></h4>${byDay[d].sort((a, b) => (b.at || '').localeCompare(a.at || '')).map(x => `
       <div class="mv"><div class="w"><span>${esc(x.s || x.c)}</span><small>${esc(x.c)}</small></div>
       <span class="a ${x.t === 'entrata' ? 'in' : 'out'}">${x.t === 'entrata' ? '+' : '−'}${money(x.a)}</span>
-      <button type="button" class="x" data-rm="${x.id}" aria-label="Elimina movimento">Elimina</button></div>`).join('')}</div>`;
+      ${canDelete(x) ? `<button type="button" class="x" data-rm="${x.id}" aria-label="Elimina movimento">Elimina</button>` : '<span></span>'}</div>`).join('')}</div>`;
   }).join('') : `<p class="hint">Nessun movimento a ${monthName(k)}. Registra la prima entrata dal modulo.</p>`;
 }
 $('movList').addEventListener('click', async e => {
@@ -1378,7 +1430,7 @@ $('movList').addEventListener('click', async e => {
   if (b.dataset.armed !== '1') { b.dataset.armed = '1'; b.textContent = 'Confermi?'; setTimeout(() => { if (b.isConnected) { b.dataset.armed = ''; b.textContent = 'Elimina'; } }, 4000); return; }
   const k = area.month;
   b.disabled = true;
-  try { const r = await sb.from('cassa').delete().eq('id', b.dataset.rm); if (r.error) throw r.error; await refreshMonth(k); say('Movimento eliminato'); }
+  try { const r = await sb.from('cassa').delete({ count: 'exact' }).eq('id', b.dataset.rm); if (r.error) throw r.error; await refreshMonth(k); say(r.count ? 'Movimento eliminato' : 'Puoi eliminare solo i movimenti inseriti da te oggi'); }
   catch { b.disabled = false; say('Non sono riuscita a eliminare. Riprova.'); }
 });
 $('csvBtn').addEventListener('click', async () => {
@@ -1468,13 +1520,13 @@ function cassaChanged() {
 }
 function cassaFromRows(rows) {
   const out = {};
-  rows.forEach(x => { const k = x.d.slice(0, 7); ((out[k] ||= { items: {} }).items)[x.id] = { d: x.d, t: x.t, c: x.c, s: x.s || '', a: x.a, at: x.created_at }; });
+  rows.forEach(x => { const k = x.d.slice(0, 7); ((out[k] ||= { items: {} }).items)[x.id] = { d: x.d, t: x.t, c: x.c, s: x.s || '', a: x.a, at: x.created_at, cb: x.created_by }; });
   return out;
 }
 async function fetchCassa(from, to) {
   const rows = [];
   for (let off = 0; ; off += 1000) {
-    let q = sb.from('cassa').select('id,d,t,c,s,a,created_at').order('d').order('id').range(off, off + 999);
+    let q = sb.from('cassa').select('id,d,t,c,s,a,created_at,created_by').order('d').order('id').range(off, off + 999);
     if (from) q = q.gte('d', from); if (to) q = q.lte('d', to);
     const { data, error } = await q; if (error) throw error;
     rows.push(...data); if (data.length < 1000) break;
@@ -1543,6 +1595,75 @@ setMode('whatsapp'); setStatus('warn', 'Orari indicativi: Paola conferma su What
 renderHeroNext();
 setLocked('Area riservata', 'Caricamento…');
 route();
+/* ---------- Permessi, utenti e attività ---------- */
+const romeDay = ts => new Date(ts).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
+function canDelete(x) { return area.role === 'admin' || (x.cb && x.cb === area.uid && x.at && romeDay(x.at) === romeDay(Date.now())); }
+const ROLE_LABEL = { admin: 'Amministratore', editor: 'Editor' };
+let usersCache = [];
+async function loadUsers() {
+  const { data, error } = await sb.rpc('staff_list');
+  if (error) { $('usersBody').innerHTML = '<tr><td colspan="3" class="cap-note">Non riesco a leggere gli utenti.</td></tr>'; return; }
+  usersCache = data;
+  $('usersBody').innerHTML = data.map(u => {
+    const me = u.user_id === area.uid;
+    const last = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('it-IT', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'mai';
+    return `<tr><td><b>${esc(u.email)}</b>${me ? ' <span class="tag">tu</span>' : ''}</td><td>${last}</td><td>
+      <select data-user="${u.user_id}" ${me ? 'disabled title="Non puoi cambiare il tuo ruolo"' : ''} aria-label="Ruolo di ${esc(u.email)}">
+        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Amministratore</option>
+        <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>Editor</option>
+        <option value="" ${!u.role ? 'selected' : ''}>Nessun accesso</option>
+      </select></td></tr>`;
+  }).join('');
+}
+$('usersBody').addEventListener('change', async e => {
+  const s = e.target.closest('select[data-user]'); if (!s) return;
+  s.disabled = true;
+  const { error } = await sb.rpc('set_role', { p_user: s.dataset.user, p_role: s.value || null });
+  say(error ? 'Non sono riuscita a cambiare il ruolo' : 'Ruolo aggiornato');
+  loadUsers();
+});
+const act = { rows: [], off: 0 };
+const shortD = d => d ? parseIso(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }) : '';
+function emailOf(id) { const u = usersCache.find(x => x.user_id === id); return u ? u.email : 'un utente'; }
+function describe(a) {
+  const d = a.data || {}, o = a.old_data || {}, x = a.data || a.old_data || {};
+  if (a.entity === 'cassa') {
+    const what = `${x.t === 'uscita' ? "un'uscita" : "un'entrata"} di ${money(x.a)}${x.s ? ` (${esc(x.s)})` : ''} del ${shortD(x.d)}`;
+    return (a.action === 'insert' ? 'Ha registrato ' : a.action === 'delete' ? 'Ha eliminato ' : 'Ha modificato ') + what;
+  }
+  if (a.entity === 'slots') {
+    const when = x.start_min === 0 && x.end_min >= 1440 ? `tutto il giorno ${shortD(x.day)}` : `${shortD(x.day)}, ${hm(x.start_min)}–${hm(x.end_min)}`;
+    return (a.action === 'insert' ? 'Ha bloccato ' : 'Ha sbloccato ') + when + (x.note ? ` · ${esc(x.note)}` : '');
+  }
+  if (a.entity === 'bookings') {
+    const b = `${esc(x.name)}, ${shortD(x.day)} alle ${hm(x.start_min)}`;
+    if (a.action === 'insert') return `Nuova prenotazione: ${b} · ${esc((x.treatments || []).join(' + '))}`;
+    if (d.status !== o.status) return d.status === 'annullata dalla cliente' ? `Prenotazione annullata dalla cliente: ${b}` : `Ha annullato la prenotazione di ${b}`;
+    if (d.incassato && !o.incassato) return `Ha registrato l'incasso della prenotazione di ${b}`;
+    return `Ha modificato la prenotazione di ${b}`;
+  }
+  if (a.entity === 'staff') {
+    const who = esc(emailOf(x.user_id));
+    if (a.action === 'delete') return `Ha tolto l'accesso a ${who}`;
+    return `Ha impostato ${who} come ${ROLE_LABEL[d.role] || d.role}`;
+  }
+  return `${a.action} ${a.entity}`;
+}
+async function loadActivity(reset) {
+  if (reset) { act.rows = []; act.off = 0; if (!usersCache.length) { const r = await sb.rpc('staff_list'); if (!r.error) usersCache = r.data; } }
+  const { data, error } = await sb.from('audit').select('id,at,email,action,entity,data,old_data').order('id', { ascending: false }).range(act.off, act.off + 49);
+  if (error) { $('actList').innerHTML = '<li class="cap-note">Non riesco a leggere il registro delle attività.</li>'; return; }
+  act.rows.push(...data); act.off += data.length;
+  $('actMore').hidden = data.length < 50;
+  $('actList').innerHTML = act.rows.length ? act.rows.map(a => {
+    const when = new Date(a.at).toLocaleString('it-IT', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const who = a.email || (a.entity === 'bookings' ? 'Cliente dal sito' : 'Sistema');
+    return `<li class="act-${a.entity}"><span class="act-when">${when}</span><span class="act-who">${esc(who)}</span><span class="act-what">${describe(a)}</span></li>`;
+  }).join('') : '<li class="cap-note">Ancora nessuna attività registrata.</li>';
+}
+$('actMore').addEventListener('click', () => loadActivity(false));
+$('actReload').addEventListener('click', () => loadActivity(true));
+
 /* ---------- Collegamento a Supabase ---------- */
 async function refreshSlots() {
   if (!sb) return;
@@ -1578,16 +1699,19 @@ async function loadAgendaDetails() {
 }
 async function enterArea(session) {
   if (!session) { area.ok = false; showLogin(); return; }
-  const { data: ok } = await sb.rpc('is_admin');
-  if (!ok) { setLocked('Accesso non autorizzato', "Questo account non può vedere l'area riservata."); $('logoutBtn').hidden = false; return; }
-  area.ok = true;
+  const { data: role } = await sb.rpc('my_role');
+  if (!role) { setLocked('Accesso non autorizzato', "Questo account non ha ancora un ruolo. Chiedi all'amministratore di assegnartelo."); $('loginForm').hidden = true; $('logoutBtn').hidden = false; return; }
+  area.ok = true; area.role = role; area.uid = session.user.id; area.email = session.user.email || '';
+  { const n = (area.email.split('@')[0].split(/[._-]/)[0] || ''); $('areaTitle').textContent = n ? 'Ciao ' + n[0].toUpperCase() + n.slice(1) : 'Bentornata'; }
+  $('roleNote').textContent = (role === 'admin' ? 'Amministratore' : 'Editor') + ' · ' + area.email;
   $('areaLink').classList.add('is-admin'); $('logoutBtn').hidden = false; $('loginForm').hidden = true;
   await refreshSlots(); await loadAgendaDetails(); loadCassa();
   if (!$('riservata').hidden) renderArea();
 }
 function showLogin() {
-  $('locked').hidden = false; $('areaTabs').hidden = true; $('view-agenda').hidden = true; $('view-cassa').hidden = true;
-  $('lockedTitle').textContent = 'Accedi'; $('lockedText').textContent = "Area riservata a Paola: agenda e registro di cassa.";
+  $('locked').hidden = false; $('areaTabs').hidden = true; VIEWS.forEach(v => { $('view-' + v).hidden = true; });
+  $('roleNote').textContent = ''; $('areaTitle').textContent = 'Area riservata';
+  $('lockedTitle').textContent = 'Accedi'; $('lockedText').textContent = "Riservata allo studio: agenda e registro di cassa.";
   $('loginForm').hidden = false; $('logoutBtn').hidden = true;
 }
 $('loginForm').addEventListener('submit', async e => {
@@ -1606,7 +1730,7 @@ $('forgotBtn').addEventListener('click', async () => {
   const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname + '?reset=1#area-riservata' });
   $('e-login').textContent = error ? 'Non sono riuscita a inviare l\'email. Riprova tra poco.' : 'Ti ho mandato un\'email con il link per scegliere una nuova password.';
 });
-$('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); area.ok = false; area.cassa = {}; area.bookings = {}; $('areaLink').classList.remove('is-admin'); $('areaBadge').hidden = true; showLogin(); refreshSlots(); });
+$('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); area.ok = false; area.role = null; area.view = 'agenda'; area.cassa = {}; area.bookings = {}; $('areaLink').classList.remove('is-admin'); $('areaBadge').hidden = true; showLogin(); refreshSlots(); });
 $('newPassForm').addEventListener('submit', async e => {
   e.preventDefault();
   const p = $('n-pass').value;
