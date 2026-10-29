@@ -1,0 +1,6 @@
+{
+  "_nota": "Indirizzi completi dei profili social (es. https://www.instagram.com/nomeprofilo). Finché un indirizzo è vuoto, sul sito il nome compare non cliccabile con la scritta «presto». Poi esegui python3 build.py.",
+  "instagram": "",
+  "facebook": "",
+  "tiktok": ""
+}

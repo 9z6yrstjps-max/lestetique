@@ -66,6 +66,23 @@ def listino():
     return out
 
 
+SOCIAL = [('instagram', 'Instagram'), ('facebook', 'Facebook'), ('tiktok', 'TikTok')]
+ARROW = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M9 8h7v7" fill="none" '
+         'stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+def social_links(cls):
+    """Link ai profili social compilati in dati/social.json (solo semplici link, nessun contenuto incorporato)."""
+    path = os.path.join(SRC, 'dati', 'social.json')
+    data = json.loads(read(path)) if os.path.exists(path) else {}
+    links = [(name, data.get(key, '').strip()) for key, name in SOCIAL]
+    # profilo non ancora aperto: il nome compare lo stesso, non cliccabile, con «presto»
+    items = ''.join(f'<a href="{url}" target="_blank" rel="noopener">{name}{ARROW}</a>' if url.startswith('https://')
+                    else f'<span class="soon">{name}<small>presto</small></span>' for name, url in links)
+    label = 'Seguimi su' if cls == 'ct-social' else 'Seguimi'
+    return f'<div class="{cls}"><span>{label}</span><nav aria-label="Profili social">{items}</nav></div>'
+
+
 def fonts_css():
     return '<style>' + '\n'.join(
         f"@font-face{{font-family:'{fam}';font-style:{st};font-weight:{w};font-display:swap;src:url(fonts/{f}.woff2) format('woff2')}}"
@@ -85,6 +102,7 @@ def build():
     page = (page.replace('{{FONTS}}', fonts_css())
                 .replace('{{LOGO}}', img_uri('logo.png')).replace('{{MONO}}', img_uri('mono.png')).replace('{{ART}}', img_uri('art.png'))
                 .replace('{{WA_ICON_JS}}', json.dumps(wa)).replace('{{WA_ICON}}', wa)
+                .replace('{{SOCIAL_CONTATTI}}', social_links('ct-social')).replace('{{SOCIAL_FOOTER}}', social_links('foot-social'))
                 .replace('{{DATA}}', json.dumps(listino(), ensure_ascii=False))
                 .replace('{{SUPA_URL}}', cfg.get('supabase_url', '')).replace('{{SUPA_KEY}}', cfg.get('supabase_key', '')))
     left = sorted(set(re.findall(r'\{\{[A-Z_:a-z-]+\}\}', page)))

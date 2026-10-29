@@ -29,6 +29,16 @@
 .week .h.closed{color:var(--ink-soft)}
 .hours-card .btn{width:100%}
 .hc-note{font-size:.8rem;color:var(--ink-soft);margin:0;text-align:center}
+/* social: solo link */
+.ct-left{display:flex;flex-direction:column;gap:20px;min-width:0}
+.ct-social{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:0 4px}
+.ct-social>span{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--ink-soft)}
+.ct-social nav{display:flex;flex-wrap:wrap;gap:8px}
+.ct-social a{display:inline-flex;align-items:center;gap:6px;padding:8px 14px 8px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.04em;transition:border-color .2s,color .2s}
+.ct-social a:hover{border-color:var(--rose-mid);color:var(--rose)}
+.ct-social .soon{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 16px;border:1px dashed var(--line);border-radius:999px;color:var(--ink-soft);font-size:.82rem;font-weight:500;letter-spacing:.04em}
+.soon small{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--rose)}
+.ct-social svg{width:14px;height:14px;color:var(--rose-mid)}
 @media (max-width:900px){.ct-grid{grid-template-columns:1fr}}
 @media (max-width:560px){
   .ct-card{grid-template-columns:36px minmax(0,1fr);gap:6px 14px;padding:22px 20px;align-items:start}
