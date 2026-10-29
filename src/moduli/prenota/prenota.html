@@ -1,0 +1,68 @@
+<!-- Prenota: scelta trattamento, giorno e orario, conferma -->
+<section class="band band-blush book" id="prenota">
+  <div class="wrap">
+    <div class="book-intro">
+      <p class="eyebrow">Prenota</p>
+      <h2 style="margin-top:14px">Scegli il tuo orario</h2>
+      <ol class="steps">
+        <li><span class="num">1</span><div><b>Scegli il trattamento</b>Puoi aggiungerne più di uno: calcolo io la durata.</div></li>
+        <li><span class="num">2</span><div><b>Scegli giorno e ora</b>Vedi solo gli orari ancora liberi nella mia agenda.</div></li>
+        <li><span class="num">3</span><div><b>Conferma</b>L'appuntamento entra subito in agenda. Se serve, ti scrivo io.</div></li>
+      </ol>
+      <div class="mine" id="mine" hidden>
+        <p class="lbl">Le tue prenotazioni</p>
+        <ul id="mineList"></ul>
+      </div>
+    </div>
+
+    <form id="bookForm" novalidate>
+      <div class="field full">
+        <label for="f-treat">Trattamento</label>
+        <div class="treat-row">
+          <select id="f-treat"></select>
+          <button type="button" class="btn btn-ghost btn-sm" id="addTreat">Aggiungi</button>
+        </div>
+        <div class="top-picks"><span class="tp-l">I più richiesti</span><div id="topPicks"></div></div>
+        <ul class="picked" id="picked" aria-live="polite"></ul>
+        <p class="total" id="total"></p>
+        <span class="err" id="e-treat"></span>
+      </div>
+
+      <div class="field full">
+        <span class="lbl" id="day-l">Giorno</span>
+        <div class="days-wrap"><div class="days" id="days" role="group" aria-labelledby="day-l"></div></div>
+      </div>
+
+      <div class="field full">
+        <div class="time-head"><span class="lbl" id="time-l">Orario</span><span class="status" id="status"><i></i><span>Caricamento agenda…</span></span></div>
+        <div class="times" id="times" role="group" aria-labelledby="time-l"></div>
+        <span class="err" id="e-time"></span>
+      </div>
+
+      <div class="field">
+        <label for="f-name">Nome e cognome</label>
+        <input id="f-name" name="name" autocomplete="name" placeholder="Es. Maria Rossi">
+        <span class="err" id="e-name"></span>
+      </div>
+      <div class="field">
+        <label for="f-phone">Cellulare</label>
+        <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Es. 333 123 4567">
+        <span class="err" id="e-phone"></span>
+      </div>
+      <div class="field full">
+        <label for="f-notes">Note <small>(facoltativo)</small></label>
+        <textarea id="f-notes" name="notes" placeholder="Es. colore preferito, prima volta, mi ha presentata un'amica…"></textarea>
+      </div>
+
+      <div class="summary" id="summary" hidden></div>
+
+      <div class="form-actions">
+        <button class="btn btn-gold" type="submit" id="submitBtn">Conferma prenotazione</button>
+        <small id="privacyNote">Nome e cellulare li vede solo Paola, per contattarti in caso di imprevisti.</small>
+      </div>
+
+      <p class="legal-note">Inviando la richiesta dichiari di aver letto l'<a href="#privacy">informativa privacy</a>. Per favore non scrivere nelle note informazioni sulla salute: se ci sono allergie o esigenze particolari, ne parliamo in studio.</p>
+      <div class="result" id="result" hidden></div>
+    </form>
+  </div>
+</section>

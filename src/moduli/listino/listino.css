@@ -1,0 +1,19 @@
+/* Listino prezzi a schede */
+/* listino */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.tab{font-family:var(--f-body);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:10px 18px;border-radius:999px;border:1px solid var(--rose-mid);background:transparent;color:var(--ink);cursor:pointer;transition:background-color .2s,color .2s}
+.tab:hover{background:var(--paper)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.menu{background:var(--paper);border-radius:24px;padding:clamp(24px,4vw,48px);box-shadow:0 30px 60px -40px rgba(120,70,50,.45)}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:36px 56px}
+.group h3{font-size:1.5rem;margin-bottom:6px;display:flex;align-items:baseline;gap:12px}
+.group h3 small{font-family:var(--f-body);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+.items{list-style:none;margin:0;padding:0}
+.items li{display:flex;align-items:baseline;gap:10px;padding:9px 0;font-size:.95rem}
+.items li:last-child{border-bottom:0}
+.items .n{min-width:0}
+.items .dots{flex:1;border-bottom:1px dotted var(--rose-light);transform:translateY(-4px);min-width:16px}
+.items .p{font-family:var(--f-display);font-size:1.3rem;font-weight:600;color:var(--rose);font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+.items .p span{font-size:.8em;margin-right:2px}
+.menu-note{margin-top:28px;font-size:.82rem;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:6px 24px}
+.menu-note b{color:var(--ink);font-weight:600}

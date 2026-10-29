@@ -1,0 +1,11 @@
+/* Trattamenti: le sei categorie con prezzo di partenza */
+/* trattamenti */
+.cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.cat{background:var(--paper);padding:32px 28px;display:flex;flex-direction:column;gap:12px;min-width:0;text-decoration:none;color:inherit;transition:background-color .25s}
+.cat:hover{background:#fff}
+.cat-ico{width:44px;height:44px;color:var(--rose-mid)}
+.cat p{color:var(--ink-soft);font-size:.93rem}
+.cat-meta{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:baseline;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.cat-meta strong{font-family:var(--f-display);font-size:1.35rem;letter-spacing:0;text-transform:none;color:var(--rose);font-weight:600}
+@media (max-width:900px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cats{grid-template-columns:1fr}}

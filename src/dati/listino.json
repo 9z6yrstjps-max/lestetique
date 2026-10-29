@@ -1,0 +1,106 @@
+{
+ "_nota": "Listino del sito. Per cambiare un prezzo modifica 'prezzo' (euro); 'minuti' è la durata usata per le prenotazioni.",
+ "categorie": [
+  {"id": "mani", "titolo_breve": "Mani e piedi", "titolo": "Mani, piedi e unghie", "icona": "mani",
+   "descrizione": "Manicure, pedicure estetico e curativo, semipermanente, ricostruzione e refill in gel o Acrygel.",
+   "nota_in_fondo": "<span><b>One Step</b> · smalto semipermanente in un solo passaggio</span><span><b>Baby Boomer</b> · sfumatura dal rosa al bianco</span>",
+   "gruppi": [
+    {"gruppo": "Mani", "trattamenti": [
+     {"nome": "Manicure", "prezzo": 12, "minuti": 30},
+     {"nome": "Manicure con One Step", "prezzo": 15, "minuti": 45},
+     {"nome": "Semipermanente mani", "prezzo": 15, "minuti": 45},
+     {"nome": "Semipermanente con Baby Boomer / French", "prezzo": 20, "minuti": 60},
+     {"nome": "Semipermanente rinforzato", "prezzo": 20, "minuti": 60},
+     {"nome": "Semipermanente rinforzato con Baby Boomer / French", "prezzo": 25, "minuti": 75}
+    ]},
+    {"gruppo": "Piedi", "trattamenti": [
+     {"nome": "One Step piedi", "prezzo": 8, "minuti": 30},
+     {"nome": "Semipermanente piedi", "prezzo": 10, "minuti": 45},
+     {"nome": "Pedicure estetico", "prezzo": 20, "minuti": 45},
+     {"nome": "Pedicure estetico con One Step", "prezzo": 30, "minuti": 60},
+     {"nome": "Pedicure estetico con semipermanente", "prezzo": 30, "minuti": 60},
+     {"nome": "Pedicure curativo", "prezzo": 25, "minuti": 60},
+     {"nome": "Pedicure curativo con One Step", "prezzo": 35, "minuti": 75},
+     {"nome": "Pedicure curativo con semipermanente", "prezzo": 37, "minuti": 75}
+    ]},
+    {"gruppo": "Ricostruzione", "note": "gel o Acrygel", "trattamenti": [
+     {"nome": "Ricostruzione unghie", "prezzo": 35, "minuti": 120},
+     {"nome": "Ricostruzione con Baby Boomer / French", "prezzo": 40, "minuti": 135},
+     {"nome": "Ricostruzione Extreme", "prezzo": 60, "minuti": 150}
+    ]},
+    {"gruppo": "Refill", "note": "gel o Acrygel", "trattamenti": [
+     {"nome": "Refill unghie", "prezzo": 25, "minuti": 90},
+     {"nome": "Refill con Baby Boomer / French", "prezzo": 30, "minuti": 105},
+     {"nome": "Refill Extreme", "prezzo": 45, "minuti": 120},
+     {"nome": "Refill Extreme con Baby Boomer / French", "prezzo": 50, "minuti": 135}
+    ]}
+   ]},
+  {"id": "donna", "titolo_breve": "Epilazione donna", "titolo": "Epilazione donna", "icona": "cera",
+   "descrizione": "Ceretta per viso e corpo, parziale o totale, e cura delle sopracciglia.",
+   "gruppi": [
+    {"gruppo": "Viso", "trattamenti": [
+     {"nome": "Baffetto", "prezzo": 3, "minuti": 15},
+     {"nome": "Sopracciglia", "prezzo": 5, "minuti": 15},
+     {"nome": "Cera viso", "prezzo": 8, "minuti": 15}
+    ]},
+    {"gruppo": "Corpo", "trattamenti": [
+     {"nome": "Cera ascelle", "prezzo": 5, "minuti": 15},
+     {"nome": "Cera addome", "prezzo": 8, "minuti": 15},
+     {"nome": "Cera fondoschiena", "prezzo": 8, "minuti": 15},
+     {"nome": "Cera glutei", "prezzo": 8, "minuti": 15},
+     {"nome": "Cera braccia parziale", "prezzo": 8, "minuti": 30},
+     {"nome": "Cera braccia totale", "prezzo": 12, "minuti": 30},
+     {"nome": "Cera bikini parziale", "prezzo": 8, "minuti": 15},
+     {"nome": "Cera bikini totale", "prezzo": 12, "minuti": 30},
+     {"nome": "Cera gambe parziale", "prezzo": 10, "minuti": 30},
+     {"nome": "Cera gambe totale", "prezzo": 18, "minuti": 45}
+    ]}
+   ]},
+  {"id": "uomo", "titolo_breve": "Epilazione uomo", "titolo": "Epilazione uomo", "icona": "uomo",
+   "descrizione": "Ceretta per petto, schiena, braccia, gambe e ascelle.",
+   "gruppi": [
+    {"gruppo": "", "trattamenti": [
+     {"nome": "Cera ascelle", "prezzo": 10, "minuti": 15},
+     {"nome": "Cera braccia parziale", "prezzo": 12, "minuti": 30},
+     {"nome": "Cera braccia totale", "prezzo": 18, "minuti": 30},
+     {"nome": "Cera petto", "prezzo": 25, "minuti": 30},
+     {"nome": "Cera schiena", "prezzo": 25, "minuti": 30},
+     {"nome": "Cera gambe", "prezzo": 30, "minuti": 60}
+    ]}
+   ]},
+  {"id": "corpo", "titolo_breve": "Corpo", "titolo": "Benessere corpo", "icona": "corpo",
+   "descrizione": "Massaggi rilassanti, decontratturanti, drenanti e anticellulite, coppettazione e Madera.",
+   "gruppi": [
+    {"gruppo": "Massaggi", "trattamenti": [
+     {"nome": "Massaggio decontratturante schiena", "prezzo": 20, "minuti": 30},
+     {"nome": "Massaggio rilassante", "prezzo": 20, "minuti": 60},
+     {"nome": "Massaggio linfodrenante", "prezzo": 20, "minuti": 60},
+     {"nome": "Massaggio anticellulite", "prezzo": 20, "minuti": 60},
+     {"nome": "Massaggio con coppettazione", "prezzo": 35, "minuti": 60},
+     {"nome": "Massaggio Madera", "prezzo": 35, "minuti": 60}
+    ]},
+    {"gruppo": "Trattamenti", "trattamenti": [
+     {"nome": "Pulizia profonda schiena", "prezzo": 30, "minuti": 60}
+    ]}
+   ]},
+  {"id": "viso", "titolo_breve": "Viso", "titolo": "Bellezza e benessere viso", "icona": "viso",
+   "descrizione": "Pulizia del viso, massaggio viso, hennè e fili tensori di collagene.",
+   "gruppi": [
+    {"gruppo": "Benessere viso", "trattamenti": [
+     {"nome": "Massaggio viso", "prezzo": 15, "minuti": 30},
+     {"nome": "Pulizia viso", "prezzo": 30, "minuti": 60}
+    ]},
+    {"gruppo": "Bellezza viso", "trattamenti": [
+     {"nome": "Hennè", "prezzo": 15, "minuti": 30},
+     {"nome": "Fili tensori di collagene", "prezzo": 80, "minuti": 60}
+    ]}
+   ]},
+  {"id": "makeup", "titolo_breve": "Make-up", "titolo": "Make-up", "icona": "makeup",
+   "descrizione": "Trucco per cerimonie, feste ed eventi speciali.",
+   "gruppi": [
+    {"gruppo": "", "trattamenti": [
+     {"nome": "Make up per eventi", "prezzo": 40, "minuti": 60}
+    ]}
+   ]}
+ ]
+}

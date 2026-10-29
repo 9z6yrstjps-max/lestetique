@@ -1,0 +1,29 @@
+/* Privacy e cookie */
+body.legal main>section:not(#privacy),body.legal .fab{display:none!important}
+body.legal .nav a{display:none}
+body.legal .nav .back{display:inline-flex}
+.legal-page{padding-block:48px 88px;background:var(--paper)}
+.legal-doc{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;font-size:.98rem}
+.legal-doc h2{margin:6px 0 2px}
+.legal-doc h3{font-size:1.45rem;margin-top:22px}
+.legal-doc p,.legal-doc li{color:var(--ink);line-height:1.7}
+.legal-doc ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.legal-doc ul.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:4px 28px}
+.legal-meta{font-size:.82rem;color:var(--ink-soft)!important;border-bottom:1px solid var(--line);padding-bottom:16px}
+.legal-table table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:560px}
+.legal-table th,.legal-table td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line)}
+.legal-table th{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+.legal-table tr:last-child td{border-bottom:0}
+.legal-table td{color:var(--ink)}
+@media (max-width:640px){
+  .legal-table table{min-width:0}
+  .legal-table thead{display:none}
+  .legal-table tr{display:block;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .legal-table tr:last-child{border-bottom:0}
+  .legal-table td{display:block;padding:3px 0;border:0}
+  .legal-table td:first-child{font-weight:600}
+  .legal-table td:nth-child(2)::before{content:"Base: ";color:var(--ink-soft)}
+  .legal-table td:nth-child(3)::before{content:"Conservazione: ";color:var(--ink-soft)}
+}
+.todo{background:#FFF1C9;color:#6B4E00;border-radius:4px;padding:0 4px}
+.legal-back{margin-top:24px}

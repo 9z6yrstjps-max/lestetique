@@ -1,0 +1,41 @@
+/* Contatti: WhatsApp, telefono, indirizzo e orari */
+.contact{background:var(--paper)}
+.contact .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(32px,6vw,80px);align-items:start}
+.ct-head{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.ct-head .script{font-size:2rem;margin-top:-6px}
+.ct-rows{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.ct-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:18px;align-items:center;padding:20px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background-color .2s}
+a.ct-row:hover{background:linear-gradient(90deg,rgba(246,230,221,.7),rgba(246,230,221,0))}
+a.ct-row:hover .ct-go{transform:translateX(4px);color:var(--rose)}
+.ct-ico{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--blush);color:var(--rose)}
+.ct-ico svg{width:22px;height:22px}
+.ct-ico.wa{background:rgba(31,143,85,.1);color:var(--wa)}
+.ct-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ct-lbl{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink-soft)}
+.ct-val{font-family:var(--f-display);font-size:clamp(1.3rem,2.4vw,1.6rem);font-weight:600;line-height:1.2;font-variant-numeric:lining-nums;overflow-wrap:anywhere}
+.ct-val small{display:block;font-family:var(--f-body);font-size:.85rem;font-weight:400;color:var(--ink-soft);margin-top:2px}
+.ct-go{display:inline-flex;align-items:center;gap:8px;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink);transition:transform .2s,color .2s;white-space:nowrap}
+.ct-copy{font:inherit;font-size:.74rem;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.ct-copy:hover{border-color:var(--rose-mid);color:var(--rose)}
+.ct-side{display:flex;align-items:center;gap:12px}
+.hours-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px 26px;box-shadow:0 30px 60px -48px rgba(120,70,50,.5);display:flex;flex-direction:column;gap:18px}
+.hc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.hc-top h3{font-size:1.7rem}
+.open-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;font-size:.78rem;font-weight:600;background:var(--blush);color:var(--rose)}
+.open-pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.open-pill.on{background:rgba(31,143,85,.1);color:var(--wa)}
+.week{list-style:none;margin:0;padding:0}
+.week li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 12px;font-size:.92rem}
+.week li.today{border-radius:12px}
+.week .h .b+.b::before{content:" · ";color:var(--ink-soft)}
+.week li+li{border-top:1px solid var(--line)}
+.week li.today{background:var(--blush);border-top-color:transparent}
+.week li.today+li{border-top-color:transparent}
+.week .d{font-weight:500;display:flex;align-items:center;gap:8px}
+.week .d em{font-style:normal;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;background:var(--ink);color:var(--paper);border-radius:999px;padding:2px 8px}
+.week .h{font-variant-numeric:tabular-nums lining-nums;text-align:right;color:var(--ink)}
+.week .h.closed{color:var(--ink-soft)}
+.hc-note{font-size:.84rem;color:var(--ink-soft);margin:0}
+.hc-note a{color:var(--rose)}
+@media (max-width:860px){.contact .wrap{grid-template-columns:1fr}}
+@media (max-width:480px){.ct-row{grid-template-columns:40px minmax(0,1fr);gap:8px 14px}.ct-ico{width:40px;height:40px}.ct-row>.ct-go,.ct-row>.ct-side{grid-column:2;justify-self:start}.week .h .b{display:block}.week .h .b+.b::before{content:none}.week li{align-items:start}}

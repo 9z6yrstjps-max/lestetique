@@ -1,0 +1,146 @@
+<!-- Area riservata: login, agenda, registro di cassa, utenti, attività -->
+<section class="area" id="riservata" hidden>
+  <div class="wrap">
+    <div class="area-head">
+      <div>
+        <p class="eyebrow">Area riservata</p>
+        <h2 id="areaTitle">Area riservata</h2>
+        <p class="role-note"><span id="roleNote"></span> <button class="link-btn logout" type="button" id="logoutBtn" hidden>Esci</button></p>
+      </div>
+      <div class="seg" role="tablist" aria-label="Sezioni area riservata" id="areaTabs" hidden>
+        <button type="button" role="tab" data-view="agenda" aria-selected="true">Agenda</button>
+        <button type="button" role="tab" data-view="cassa" aria-selected="false">Registro di cassa</button>
+        <button type="button" role="tab" data-view="utenti" aria-selected="false" class="admin-only" hidden>Utenti</button>
+        <button type="button" role="tab" data-view="attivita" aria-selected="false" class="admin-only" hidden>Attività</button>
+      </div>
+    </div>
+
+    <div class="locked" id="locked">
+      <img src="{{MONO}}" alt="">
+      <h3 id="lockedTitle">Verifica accesso…</h3>
+      <p id="lockedText">Un attimo, controllo le tue autorizzazioni.</p>
+      <form class="login-form" id="loginForm" hidden novalidate>
+        <div class="field"><label for="l-email">Email</label><input id="l-email" type="email" autocomplete="username" inputmode="email"></div>
+        <div class="field"><label for="l-pass">Password</label><input id="l-pass" type="password" autocomplete="current-password"></div>
+        <span class="err" id="e-login" role="status"></span>
+        <button class="btn btn-gold" type="submit" id="loginBtn">Entra</button>
+        <button class="link-btn" type="button" id="forgotBtn">Password dimenticata?</button>
+      </form>
+      <form class="login-form" id="newPassForm" hidden novalidate>
+        <div class="field"><label for="n-pass">Nuova password</label><input id="n-pass" type="password" autocomplete="new-password" minlength="8"></div>
+        <span class="err" id="e-newpass" role="status"></span>
+        <button class="btn btn-gold" type="submit">Salva password</button>
+      </form>
+      <a class="btn btn-ghost" href="#home">Torna al sito</a>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="view" id="view-agenda" hidden>
+      <div class="agenda-grid">
+        <form class="block-form" id="blockForm" novalidate>
+          <p class="lbl">Blocca un orario</p>
+          <div class="field full"><label for="b-date">Giorno</label><input id="b-date" type="date"></div>
+          <div class="field"><label for="b-from">Dalle</label><input id="b-from" type="time" step="900" value="09:00"></div>
+          <div class="field"><label for="b-to">Alle</label><input id="b-to" type="time" step="900" value="10:00"></div>
+          <div class="field full"><label for="b-note">Descrizione</label><input id="b-note" placeholder="Es. Maria Rossi, manicure (al telefono)"></div>
+          <div class="field full chips">
+            <input type="checkbox" id="b-day"><label for="b-day">Tutto il giorno (chiusura)</label>
+          </div>
+          <span class="err" id="e-block"></span>
+          <button class="btn btn-gold" type="submit">Blocca</button>
+        </form>
+        <div class="agenda-list" id="agendaList"></div>
+      </div>
+    </div>
+
+    <!-- UTENTI (solo amministratore) -->
+    <div class="view" id="view-utenti" hidden>
+      <div class="admin-grid">
+        <div class="table-wrap"><table class="users">
+          <thead><tr><th scope="col">Nome</th><th scope="col">Account</th><th scope="col">Ultimo accesso</th><th scope="col">Ruolo</th></tr></thead>
+          <tbody id="usersBody"><tr><td colspan="4" class="cap-note">Carico gli utenti…</td></tr></tbody>
+        </table></div>
+        <aside class="help-card">
+          <p class="lbl">I ruoli</p>
+          <p><b>Amministratore</b> · tutto: agenda, cassa con eliminazione di qualsiasi movimento, utenti e registro delle attività.</p>
+          <p><b>Editor</b> · agenda e registro di cassa. Può eliminare solo i movimenti che ha inserito lei nella stessa giornata.</p>
+          <p class="lbl" style="margin-top:8px">Aggiungere una persona</p>
+          <p>Crea l'account in Supabase, in <i>Authentication → Users → Add user</i>, poi torna qui e assegnale un ruolo.</p>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ATTIVITÀ (solo amministratore) -->
+    <div class="view" id="view-attivita" hidden>
+      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
+      <ol class="act-list" id="actList"></ol>
+      <button type="button" class="btn btn-ghost" id="actMore" hidden>Carica altre</button>
+    </div>
+
+    <!-- CASSA -->
+    <div class="view" id="view-cassa" hidden>
+      <div class="cassa-bar">
+        <div class="seg seg-sm" role="tablist" aria-label="Vista registro" id="cassaTabs">
+          <button type="button" role="tab" data-cv="mese" aria-selected="true">Mese</button>
+          <button type="button" role="tab" data-cv="storico" aria-selected="false">Storico</button>
+        </div>
+        <div class="month-nav" id="monthNav">
+          <button type="button" class="icon-btn" id="mPrev" aria-label="Mese precedente">‹</button>
+          <span id="mLabel">—</span>
+          <button type="button" class="icon-btn" id="mNext" aria-label="Mese successivo">›</button>
+        </div>
+      </div>
+
+      <p class="cassa-status" id="cassaStatus" role="status" hidden></p>
+      <div id="cv-mese">
+        <div class="kpis" id="kpis"></div>
+        <div class="cassa-grid">
+          <form class="mov-form" id="movForm" novalidate>
+            <p class="lbl">Nuovo movimento</p>
+            <div class="seg seg-sm full" role="radiogroup" aria-label="Tipo di movimento" id="movType">
+              <button type="button" role="radio" data-t="entrata" aria-checked="true">Entrata</button>
+              <button type="button" role="radio" data-t="uscita" aria-checked="false">Uscita</button>
+            </div>
+            <div class="field"><label for="m-date">Data</label><input id="m-date" type="date"></div>
+            <div class="field"><label for="m-cat">Categoria</label><select id="m-cat"></select></div>
+            <div class="field full">
+              <label for="m-desc">Descrizione</label>
+              <input id="m-desc" list="descList" placeholder="Es. Semipermanente mani" autocomplete="off">
+              <datalist id="descList"></datalist>
+              <div class="quick" id="quick" aria-label="Voci frequenti"></div>
+            </div>
+            <div class="field full">
+              <label for="m-amt">Importo (€)</label>
+              <input id="m-amt" inputmode="decimal" placeholder="0,00" autocomplete="off">
+            </div>
+            <span class="err" id="e-mov"></span>
+            <button class="btn btn-gold" type="submit" id="movSave">Registra</button>
+          </form>
+          <div class="mov-side">
+            <div class="breakdown" id="breakdown"></div>
+            <div class="movs">
+              <div class="movs-head"><p class="lbl">Movimenti</p><button type="button" class="link-btn" id="csvBtn" hidden>Scarica CSV del mese</button></div>
+              <div id="movList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="cv-storico" hidden>
+        <div class="year-chips" id="yearChips"></div>
+        <div class="kpis" id="yKpis"></div>
+        <figure class="chart-card">
+          <figcaption><span class="lbl">Saldo mensile</span><span class="cap-note">Entrate meno uscite · passa sulle barre per i dettagli</span></figcaption>
+          <div class="chart" id="chart"></div>
+        </figure>
+        <div class="table-wrap">
+          <table class="hist">
+            <thead><tr><th scope="col">Mese</th><th scope="col">Entrate</th><th scope="col">Uscite</th><th scope="col">Saldo</th><th scope="col">Movimenti</th></tr></thead>
+            <tbody id="histBody"></tbody>
+            <tfoot id="histFoot"></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
