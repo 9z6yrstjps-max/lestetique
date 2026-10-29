@@ -1,31 +1,36 @@
 <!-- Contatti: WhatsApp, telefono, indirizzo e orari -->
 <section class="band contact" id="contatti">
   <div class="wrap">
-    <div>
-      <div class="ct-head">
-        <p class="eyebrow">Contatti</p>
-        <h2>Vieni a trovarmi</h2>
-        <span class="script">ti aspetto in studio</span>
-      </div>
-      <ul class="ct-rows">
-        <li><a class="ct-row" href="https://wa.me/393930076415" target="_blank" rel="noopener">
-          <span class="ct-ico wa">{{WA_ICON}}</span>
-          <span class="ct-txt"><span class="ct-lbl">WhatsApp</span><span class="ct-val">Scrivimi un messaggio<small>Per appuntamenti, informazioni e consigli</small></span></span>
-          <span class="ct-go">Scrivi <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></a></li>
-        <li><div class="ct-row">
-          <span class="ct-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.5h3.2l1.6 4.2-2.1 1.4a11 11 0 0 0 5.2 5.2l1.4-2.1 4.2 1.6V17a2.5 2.5 0 0 1-2.5 2.5C9.9 19.5 4.5 14.1 4.5 7.9 4.5 5.6 5 3.5 5 3.5z"/></svg></span>
-          <span class="ct-txt"><span class="ct-lbl">Telefono</span><span class="ct-val" id="phoneTxt">+39 393 007 6415</span></span>
-          <span class="ct-side"><button class="ct-copy" type="button" data-copy="+39 393 007 6415">Copia</button><a class="ct-go" href="tel:+393930076415">Chiama <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a></span></div></li>
-        <li><a class="ct-row" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Mario+Lanzotti+1+82018+San+Giorgio+del+Sannio+BN" target="_blank" rel="noopener">
-          <span class="ct-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.3"/></svg></span>
-          <span class="ct-txt"><span class="ct-lbl">Lo studio</span><span class="ct-val">Via Mario Lanzotti, 1<small>82018 San Giorgio del Sannio (BN)</small></span></span>
-          <span class="ct-go">Indicazioni <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></a></li>
-      </ul>
+    <div class="sec-head">
+      <p class="eyebrow">Contatti</p>
+      <h2>Vieni a trovarmi, <span class="script" style="font-size:1.15em">ti aspetto in studio</span></h2>
+      <p class="lead">Per un appuntamento, un'informazione o un consiglio scrivimi quando vuoi: ti rispondo appena ho le mani libere.</p>
     </div>
-    <aside class="hours-card" aria-labelledby="hc-title">
-      <div class="hc-top"><h3 id="hc-title">Orari</h3><span class="open-pill" id="openPill"><i></i><span>—</span></span></div>
-      <ul class="week" id="week"></ul>
-      <p class="hc-note">Su appuntamento. Puoi <a href="#prenota">prenotare online</a> a qualsiasi ora.</p>
-    </aside>
+    <div class="ct-grid">
+      <ul class="ct-cards">
+        <li class="ct-card">
+          <span class="ct-ico">{{WA_ICON}}</span>
+          <div class="ct-txt"><span class="ct-lbl">WhatsApp</span><h3>Scrivimi un messaggio</h3><p>Il modo più veloce per appuntamenti e informazioni.</p></div>
+          <div class="ct-act"><a class="btn btn-gold btn-sm" href="https://wa.me/393930076415" target="_blank" rel="noopener">Scrivimi</a></div>
+        </li>
+        <li class="ct-card">
+          <span class="ct-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.5h3.2l1.6 4.2-2.1 1.4a11 11 0 0 0 5.2 5.2l1.4-2.1 4.2 1.6V17a2.5 2.5 0 0 1-2.5 2.5C9.9 19.5 4.5 14.1 4.5 7.9 4.5 5.6 5 3.5 5 3.5z"/></svg></span>
+          <div class="ct-txt"><span class="ct-lbl">Telefono</span><h3 id="phoneTxt">+39 393 007 6415</h3><p>Chiamami negli orari di apertura. <button class="link-btn ct-copy" type="button" data-copy="+39 393 007 6415">Copia il numero</button></p></div>
+          <div class="ct-act"><a class="btn btn-ghost btn-sm" href="tel:+393930076415">Chiama</a></div>
+        </li>
+        <li class="ct-card">
+          <span class="ct-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.3"/></svg></span>
+          <div class="ct-txt"><span class="ct-lbl">Lo studio</span><h3>Via Mario Lanzotti, 1</h3><p>82018 San Giorgio del Sannio (BN)</p></div>
+          <div class="ct-act"><a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+Mario+Lanzotti+1+82018+San+Giorgio+del+Sannio+BN" target="_blank" rel="noopener">Indicazioni</a></div>
+        </li>
+      </ul>
+      <aside class="hours-card" aria-labelledby="hc-title">
+        <div class="hc-top"><p class="eyebrow" id="hc-title">Orari</p><span class="script" aria-hidden="true">su appuntamento</span></div>
+        <span class="open-pill" id="openPill"><i></i><span>—</span></span>
+        <ul class="week" id="week"></ul>
+        <a class="btn btn-gold" href="#prenota">Prenota online</a>
+        <p class="hc-note">Puoi prenotare dal sito a qualsiasi ora: l'appuntamento entra subito in agenda.</p>
+      </aside>
+    </div>
   </div>
 </section>
