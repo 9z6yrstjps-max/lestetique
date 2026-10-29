@@ -103,7 +103,18 @@
 
     <!-- ATTIVITÀ (solo amministratore) -->
     <div class="view" id="view-attivita" hidden>
-      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, clienti, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
+      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, clienti, cassa e utenti.</p>
+        <div class="act-tools">
+          <button type="button" class="link-btn" id="actReload">Aggiorna</button>
+          <select id="actAge" aria-label="Quali attività cancellare">
+            <option value="30">Più vecchie di 1 mese</option>
+            <option value="90">Più vecchie di 3 mesi</option>
+            <option value="365">Più vecchie di 1 anno</option>
+            <option value="">Tutte</option>
+          </select>
+          <button type="button" class="btn btn-ghost btn-sm" id="actClean">Pulisci registro</button>
+        </div>
+      </div>
       <ol class="act-list" id="actList"></ol>
       <button type="button" class="btn btn-ghost" id="actMore" hidden>Carica altre</button>
     </div>

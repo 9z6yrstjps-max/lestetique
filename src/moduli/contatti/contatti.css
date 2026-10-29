@@ -48,3 +48,10 @@
   .week li{padding:10px 14px;align-items:start}
   .week .h .b{display:block}.week .h .b+.b::before{content:none}
 }
+
+/* icone social ufficiali (se presenti in img/social) */
+.soc-ico{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid var(--line);transition:transform .2s,border-color .2s}
+.soc-ico img{width:24px;height:24px;object-fit:contain}
+a.soc-ico:hover{transform:translateY(-2px);border-color:var(--rose-mid)}
+.soc-ico.soon{opacity:.55}
+.soon-note{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--rose)}

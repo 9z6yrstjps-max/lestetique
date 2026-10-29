@@ -1,0 +1,14 @@
+Icone ufficiali dei social (a colori) per il sito.
+
+Metti qui i file con questi nomi esatti (SVG o PNG, quadrati, almeno 96x96 se PNG):
+  instagram.svg  (oppure instagram.png)
+  facebook.svg   (oppure facebook.png)
+  tiktok.svg     (oppure tiktok.png)
+
+Dove scaricarle (sono gli originali, da usare così come sono, senza modificarli):
+  Instagram: https://about.meta.com/brand/resources/instagram/  -> "Instagram glyph" a colori (gradiente)
+  Facebook:  https://about.meta.com/brand/resources/facebook/   -> "Facebook logo" blu (la "f" nel cerchio)
+  TikTok:    https://www.tiktok.com/about/brand-guidelines      -> "TikTok icon" (nota in nero con bordi ciano/rosa)
+
+Poi esegui python3 build.py (o chiedi a Claude): al posto dei nomi compariranno le icone.
+Se un file manca, per quel social resta il nome scritto.

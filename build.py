@@ -71,16 +71,36 @@ ARROW = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M9 8h7v
          'stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 
+def social_icon(key):
+    """Icona ufficiale messa da Enzo in src/img/social/ (instagram.svg/.png ...), come data URI; None se manca."""
+    for ext, mime in (('svg', 'image/svg+xml'), ('png', 'image/png')):
+        f = os.path.join(SRC, 'img', 'social', f'{key}.{ext}')
+        if os.path.exists(f):
+            with open(f, 'rb') as fh:
+                return f'data:{mime};base64,' + base64.b64encode(fh.read()).decode()
+    return None
+
+
 def social_links(cls):
-    """Link ai profili social compilati in dati/social.json (solo semplici link, nessun contenuto incorporato)."""
+    """Link ai profili in dati/social.json (solo semplici link, nessun contenuto incorporato).
+    Con l'icona in img/social/ compare l'icona, altrimenti il nome. Senza indirizzo: non cliccabile, «presto»."""
     path = os.path.join(SRC, 'dati', 'social.json')
     data = json.loads(read(path)) if os.path.exists(path) else {}
-    links = [(name, data.get(key, '').strip()) for key, name in SOCIAL]
-    # profilo non ancora aperto: il nome compare lo stesso, non cliccabile, con «presto»
-    items = ''.join(f'<a href="{url}" target="_blank" rel="noopener">{name}{ARROW}</a>' if url.startswith('https://')
-                    else f'<span class="soon">{name}<small>presto</small></span>' for name, url in links)
+    items, waiting = [], 0
+    for key, name in SOCIAL:
+        url, icon = data.get(key, '').strip(), social_icon(key)
+        live = url.startswith('https://')
+        waiting += not live
+        if icon:
+            img = f'<img src="{icon}" alt="" width="40" height="40">'
+            items.append(f'<a class="soc-ico" href="{url}" target="_blank" rel="noopener" aria-label="{name}" title="{name}">{img}</a>' if live
+                         else f'<span class="soc-ico soon" role="img" aria-label="{name}, profilo in arrivo" title="{name} · presto">{img}</span>')
+        else:
+            items.append(f'<a href="{url}" target="_blank" rel="noopener">{name}{ARROW}</a>' if live
+                         else f'<span class="soon">{name}<small>presto</small></span>')
+    note = '<small class="soon-note">presto</small>' if waiting == len(SOCIAL) and all(social_icon(k) for k, _ in SOCIAL) else ''
     label = 'Seguimi su' if cls == 'ct-social' else 'Seguimi'
-    return f'<div class="{cls}"><span>{label}</span><nav aria-label="Profili social">{items}</nav></div>'
+    return f'<div class="{cls}"><span>{label}</span><nav aria-label="Profili social">{"".join(items)}</nav>{note}</div>'
 
 
 def fonts_css():

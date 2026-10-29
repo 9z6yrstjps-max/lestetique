@@ -181,5 +181,10 @@ body.private footer .script{display:none}
 .cv-p{font-weight:600;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
 .cv-tag{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 .cv-tag.fut{color:var(--rose);font-weight:600}
+.cv-tag.paid{color:var(--pos);font-weight:600}
 @media (max-width:900px){.cl-grid{grid-template-columns:1fr}.cl-card{position:static}.cl-list{max-height:50vh}}
 @media (max-width:560px){.cl-stats{grid-template-columns:1fr 1fr}.cl-visit{grid-template-columns:1fr}.cl-visits li{grid-template-columns:1fr auto;gap:2px 12px}.cv-what{grid-column:1/-1;order:-1}.cv-tag{grid-column:1}}
+.act-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.act-tools select{width:auto;padding:8px 12px;font-size:.85rem}
+#actClean[data-armed="1"]{border-color:var(--neg);color:var(--neg)}
+@media (max-width:640px){.act-head{flex-direction:column;align-items:flex-start}}

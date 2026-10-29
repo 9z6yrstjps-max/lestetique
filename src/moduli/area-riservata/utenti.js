@@ -67,6 +67,10 @@ function describe(a) {
     if (a.action === 'update' && d.role === o.role) return `Ha impostato il nome di ${who}: ${esc(d.name || '—')}`;
     return `Ha impostato ${who} come ${ROLE_LABEL[d.role] || d.role}`;
   }
+  if (a.entity === 'audit' && a.action === 'clean') {
+    const n = (a.data && a.data.righe) || 0, g = a.data && a.data.giorni;
+    return `Ha pulito il registro: ${n === 1 ? '1 attività cancellata' : n + ' attività cancellate'}${g ? ` (più vecchie di ${g === 30 ? '1 mese' : g === 90 ? '3 mesi' : g === 365 ? '1 anno' : g + ' giorni'})` : ' (tutte)'}`;
+  }
   return `${a.action} ${a.entity}`;
 }
 async function loadActivity(reset) {
@@ -83,3 +87,16 @@ async function loadActivity(reset) {
 }
 $('actMore').addEventListener('click', () => loadActivity(false));
 $('actReload').addEventListener('click', () => loadActivity(true));
+
+/* Pulizia del registro (solo amministratore): chiede conferma, poi lascia una riga che dice chi ha pulito */
+$('actAge').addEventListener('change', () => { const b = $('actClean'); b.dataset.armed = ''; b.textContent = 'Pulisci registro'; });
+$('actClean').addEventListener('click', async () => {
+  const b = $('actClean'), g = $('actAge').value ? +$('actAge').value : null;
+  if (b.dataset.armed !== '1') { b.dataset.armed = '1'; b.textContent = g ? 'Confermi la pulizia?' : 'Confermi? Si cancella tutto'; return; }
+  b.disabled = true;
+  const { data, error } = await sb.rpc('pulisci_attivita', { p_giorni: g });
+  b.disabled = false; b.dataset.armed = ''; b.textContent = 'Pulisci registro';
+  if (error) { say(/PGRST202|Could not find/i.test((error.code || '') + ' ' + (error.message || '')) ? 'Prima va aggiornato il database (file 6-pulisci-registro.sql)' : 'Non sono riuscita a pulire il registro'); return; }
+  say(data ? (data === 1 ? '1 attività cancellata' : data + ' attività cancellate') : 'Nessuna attività da cancellare');
+  loadActivity(true);
+});

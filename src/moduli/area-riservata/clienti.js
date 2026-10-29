@@ -13,9 +13,10 @@ const treatOptions = (first, extra = []) => `<option value="">${first}</option>`
 function clStatus(text) { const s = $('cl-status'); s.hidden = !text; s.textContent = text || ''; }
 
 async function loadClienti() {
-  const [c, h] = await Promise.all([
+  const [c, h, inc] = await Promise.all([
     sb.from('clienti').select('*').order('cognome').order('nome'),
-    sb.from('storico_clienti').select('id,cliente_id,day,treatments,price,origine,created_by').order('day', { ascending: false })
+    sb.from('storico_clienti').select('id,cliente_id,day,treatments,price,origine,created_by').order('day', { ascending: false }),
+    sb.from('bookings').select('id').eq('incassato', true).not('cliente_id', 'is', null)
   ]);
   if (c.error || h.error) {
     cl.list = []; cl.hist = [];
@@ -23,14 +24,21 @@ async function loadClienti() {
     $('cl-list').innerHTML = ''; $('cl-count').textContent = ''; $('cl-new').disabled = true; renderCard(); return;
   }
   clStatus(''); $('cl-new').disabled = false;
-  cl.list = c.data; cl.hist = h.data.map(r => ({ ...r, price: Number(r.price) }));
+  const paid = new Set(((inc && inc.data) || []).map(r => r.id));
+  // fatto = aggiunto in studio, oppure prenotazione incassata, oppure giorno già passato
+  const today = todayIso();
+  cl.hist = h.data.map(r => {
+    const incassato = r.origine === 'studio' || paid.has(r.id);
+    return { ...r, price: Number(r.price), incassato, done: incassato || r.day < today };
+  });
+  cl.list = c.data;
   buildStats(); fillTreatFilter(); renderClienti();
 }
 function buildStats() {
   const today = todayIso(), by = {};
   cl.hist.forEach(r => (by[r.cliente_id] ||= []).push(r));
   cl.list.forEach(c => {
-    const h = by[c.id] || [], past = h.filter(r => r.day <= today), fut = h.filter(r => r.day > today);
+    const h = by[c.id] || [], past = h.filter(r => r.done), fut = h.filter(r => !r.done);
     const count = {}; past.forEach(r => r.treatments.forEach(t => { count[t] = (count[t] || 0) + 1; }));
     Object.assign(c, {
       _hist: h, _n: past.length, _tot: past.reduce((s, r) => s + r.price, 0),
@@ -127,9 +135,10 @@ function renderCard() {
       </form>
       <ul class="cl-visits">${hist.length ? hist.map(r => {
         const canDel = r.origine === 'studio' && (area.role === 'admin' || r.created_by === area.uid);
-        const fut = r.day > todayIso();
+        const tag = r.origine === 'studio' ? ['', 'in studio'] : r.incassato ? ['paid', 'incassato'] : r.done ? ['', 'dal sito']
+          : r.day === todayIso() ? ['fut', 'oggi'] : ['fut', 'in programma'];
         return `<li><span class="cv-day">${fmtD(r.day)}</span><span class="cv-what">${esc(r.treatments.join(' + '))}</span><span class="cv-p">€${r.price.toLocaleString('it-IT')}</span>
-          <span class="cv-tag ${fut ? 'fut' : ''}">${fut ? 'in programma' : r.origine === 'sito' ? 'dal sito' : 'in studio'}</span>${canDel ? `<button type="button" class="link-btn" data-vdel="${r.id}">Togli</button>` : '<span></span>'}</li>`;
+          <span class="cv-tag ${tag[0]}">${tag[1]}</span>${canDel ? `<button type="button" class="link-btn" data-vdel="${r.id}">Togli</button>` : '<span></span>'}</li>`;
       }).join('') : '<li class="cap-note">Ancora nessun trattamento registrato.</li>'}</ul>
     </div>`}`;
   cl.picked = []; renderVisitPicked();

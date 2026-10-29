@@ -16,3 +16,7 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 .foot-social svg{width:13px;height:13px;color:var(--rose-light)}
 .foot-social .soon{display:inline-flex;align-items:center;gap:6px;color:#D2C2B2}
 .foot-social .soon small{color:var(--rose-light)}
+.foot-social .soc-ico{width:36px;height:36px;background:#fff;border:0;border-radius:50%;display:inline-grid;place-items:center}
+.foot-social .soc-ico img{width:20px;height:20px}
+.foot-social nav{align-items:center}
+.foot-social .soon-note{color:var(--rose-light)}

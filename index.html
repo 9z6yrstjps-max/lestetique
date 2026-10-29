@@ -399,6 +399,13 @@ label.check small{color:var(--ink-soft);font-size:.78rem}
   .week .h .b{display:block}.week .h .b+.b::before{content:none}
 }
 
+/* icone social ufficiali (se presenti in img/social) */
+.soc-ico{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid var(--line);transition:transform .2s,border-color .2s}
+.soc-ico img{width:24px;height:24px;object-fit:contain}
+a.soc-ico:hover{transform:translateY(-2px);border-color:var(--rose-mid)}
+.soc-ico.soon{opacity:.55}
+.soon-note{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--rose)}
+
 /* Privacy e cookie */
 body.legal main>section:not(#privacy),body.legal .vetrina,body.legal .fab{display:none!important}
 body.legal .nav a{display:none}
@@ -612,8 +619,13 @@ body.private footer .script{display:none}
 .cv-p{font-weight:600;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
 .cv-tag{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
 .cv-tag.fut{color:var(--rose);font-weight:600}
+.cv-tag.paid{color:var(--pos);font-weight:600}
 @media (max-width:900px){.cl-grid{grid-template-columns:1fr}.cl-card{position:static}.cl-list{max-height:50vh}}
 @media (max-width:560px){.cl-stats{grid-template-columns:1fr 1fr}.cl-visit{grid-template-columns:1fr}.cl-visits li{grid-template-columns:1fr auto;gap:2px 12px}.cv-what{grid-column:1/-1;order:-1}.cv-tag{grid-column:1}}
+.act-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.act-tools select{width:auto;padding:8px 12px;font-size:.85rem}
+#actClean[data-armed="1"]{border-color:var(--neg);color:var(--neg)}
+@media (max-width:640px){.act-head{flex-direction:column;align-items:flex-start}}
 
 /* Footer: dati dello studio e link privacy */
 .foot-link{color:#EDE2D6;text-underline-offset:3px}
@@ -633,6 +645,10 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 .foot-social svg{width:13px;height:13px;color:var(--rose-light)}
 .foot-social .soon{display:inline-flex;align-items:center;gap:6px;color:#D2C2B2}
 .foot-social .soon small{color:var(--rose-light)}
+.foot-social .soc-ico{width:36px;height:36px;background:#fff;border:0;border-radius:50%;display:inline-grid;place-items:center}
+.foot-social .soc-ico img{width:20px;height:20px}
+.foot-social nav{align-items:center}
+.foot-social .soon-note{color:var(--rose-light)}
 
 </style>
 </head>
@@ -912,7 +928,18 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 
     <!-- ATTIVITÀ (solo amministratore) -->
     <div class="view" id="view-attivita" hidden>
-      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, clienti, cassa e utenti.</p><button type="button" class="link-btn" id="actReload">Aggiorna</button></div>
+      <div class="act-head"><p class="cap-note">Le ultime modifiche ad agenda, prenotazioni, clienti, cassa e utenti.</p>
+        <div class="act-tools">
+          <button type="button" class="link-btn" id="actReload">Aggiorna</button>
+          <select id="actAge" aria-label="Quali attività cancellare">
+            <option value="30">Più vecchie di 1 mese</option>
+            <option value="90">Più vecchie di 3 mesi</option>
+            <option value="365">Più vecchie di 1 anno</option>
+            <option value="">Tutte</option>
+          </select>
+          <button type="button" class="btn btn-ghost btn-sm" id="actClean">Pulisci registro</button>
+        </div>
+      </div>
       <ol class="act-list" id="actList"></ol>
       <button type="button" class="btn btn-ghost" id="actMore" hidden>Carica altre</button>
     </div>
@@ -1832,6 +1859,10 @@ function describe(a) {
     if (a.action === 'update' && d.role === o.role) return `Ha impostato il nome di ${who}: ${esc(d.name || '—')}`;
     return `Ha impostato ${who} come ${ROLE_LABEL[d.role] || d.role}`;
   }
+  if (a.entity === 'audit' && a.action === 'clean') {
+    const n = (a.data && a.data.righe) || 0, g = a.data && a.data.giorni;
+    return `Ha pulito il registro: ${n === 1 ? '1 attività cancellata' : n + ' attività cancellate'}${g ? ` (più vecchie di ${g === 30 ? '1 mese' : g === 90 ? '3 mesi' : g === 365 ? '1 anno' : g + ' giorni'})` : ' (tutte)'}`;
+  }
   return `${a.action} ${a.entity}`;
 }
 async function loadActivity(reset) {
@@ -1849,6 +1880,19 @@ async function loadActivity(reset) {
 $('actMore').addEventListener('click', () => loadActivity(false));
 $('actReload').addEventListener('click', () => loadActivity(true));
 
+/* Pulizia del registro (solo amministratore): chiede conferma, poi lascia una riga che dice chi ha pulito */
+$('actAge').addEventListener('change', () => { const b = $('actClean'); b.dataset.armed = ''; b.textContent = 'Pulisci registro'; });
+$('actClean').addEventListener('click', async () => {
+  const b = $('actClean'), g = $('actAge').value ? +$('actAge').value : null;
+  if (b.dataset.armed !== '1') { b.dataset.armed = '1'; b.textContent = g ? 'Confermi la pulizia?' : 'Confermi? Si cancella tutto'; return; }
+  b.disabled = true;
+  const { data, error } = await sb.rpc('pulisci_attivita', { p_giorni: g });
+  b.disabled = false; b.dataset.armed = ''; b.textContent = 'Pulisci registro';
+  if (error) { say(/PGRST202|Could not find/i.test((error.code || '') + ' ' + (error.message || '')) ? 'Prima va aggiornato il database (file 6-pulisci-registro.sql)' : 'Non sono riuscita a pulire il registro'); return; }
+  say(data ? (data === 1 ? '1 attività cancellata' : data + ' attività cancellate') : 'Nessuna attività da cancellare');
+  loadActivity(true);
+});
+
 /* ===== area-riservata/clienti.js ===== */
 /* ---------- Clienti: schede, storico trattamenti e consensi ---------- */
 const cl = { list: [], hist: [], sel: null, isNew: false, picked: [] };
@@ -1865,9 +1909,10 @@ const treatOptions = (first, extra = []) => `<option value="">${first}</option>`
 function clStatus(text) { const s = $('cl-status'); s.hidden = !text; s.textContent = text || ''; }
 
 async function loadClienti() {
-  const [c, h] = await Promise.all([
+  const [c, h, inc] = await Promise.all([
     sb.from('clienti').select('*').order('cognome').order('nome'),
-    sb.from('storico_clienti').select('id,cliente_id,day,treatments,price,origine,created_by').order('day', { ascending: false })
+    sb.from('storico_clienti').select('id,cliente_id,day,treatments,price,origine,created_by').order('day', { ascending: false }),
+    sb.from('bookings').select('id').eq('incassato', true).not('cliente_id', 'is', null)
   ]);
   if (c.error || h.error) {
     cl.list = []; cl.hist = [];
@@ -1875,14 +1920,21 @@ async function loadClienti() {
     $('cl-list').innerHTML = ''; $('cl-count').textContent = ''; $('cl-new').disabled = true; renderCard(); return;
   }
   clStatus(''); $('cl-new').disabled = false;
-  cl.list = c.data; cl.hist = h.data.map(r => ({ ...r, price: Number(r.price) }));
+  const paid = new Set(((inc && inc.data) || []).map(r => r.id));
+  // fatto = aggiunto in studio, oppure prenotazione incassata, oppure giorno già passato
+  const today = todayIso();
+  cl.hist = h.data.map(r => {
+    const incassato = r.origine === 'studio' || paid.has(r.id);
+    return { ...r, price: Number(r.price), incassato, done: incassato || r.day < today };
+  });
+  cl.list = c.data;
   buildStats(); fillTreatFilter(); renderClienti();
 }
 function buildStats() {
   const today = todayIso(), by = {};
   cl.hist.forEach(r => (by[r.cliente_id] ||= []).push(r));
   cl.list.forEach(c => {
-    const h = by[c.id] || [], past = h.filter(r => r.day <= today), fut = h.filter(r => r.day > today);
+    const h = by[c.id] || [], past = h.filter(r => r.done), fut = h.filter(r => !r.done);
     const count = {}; past.forEach(r => r.treatments.forEach(t => { count[t] = (count[t] || 0) + 1; }));
     Object.assign(c, {
       _hist: h, _n: past.length, _tot: past.reduce((s, r) => s + r.price, 0),
@@ -1979,9 +2031,10 @@ function renderCard() {
       </form>
       <ul class="cl-visits">${hist.length ? hist.map(r => {
         const canDel = r.origine === 'studio' && (area.role === 'admin' || r.created_by === area.uid);
-        const fut = r.day > todayIso();
+        const tag = r.origine === 'studio' ? ['', 'in studio'] : r.incassato ? ['paid', 'incassato'] : r.done ? ['', 'dal sito']
+          : r.day === todayIso() ? ['fut', 'oggi'] : ['fut', 'in programma'];
         return `<li><span class="cv-day">${fmtD(r.day)}</span><span class="cv-what">${esc(r.treatments.join(' + '))}</span><span class="cv-p">€${r.price.toLocaleString('it-IT')}</span>
-          <span class="cv-tag ${fut ? 'fut' : ''}">${fut ? 'in programma' : r.origine === 'sito' ? 'dal sito' : 'in studio'}</span>${canDel ? `<button type="button" class="link-btn" data-vdel="${r.id}">Togli</button>` : '<span></span>'}</li>`;
+          <span class="cv-tag ${tag[0]}">${tag[1]}</span>${canDel ? `<button type="button" class="link-btn" data-vdel="${r.id}">Togli</button>` : '<span></span>'}</li>`;
       }).join('') : '<li class="cap-note">Ancora nessun trattamento registrato.</li>'}</ul>
     </div>`}`;
   cl.picked = []; renderVisitPicked();
