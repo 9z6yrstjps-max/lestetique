@@ -1,21 +1,21 @@
 /* Base: colori, caratteri, pulsanti, moduli e componenti comuni */
-/* Layout: hero con scheda 'prima disponibilità', poi sezioni a banda alterna (avorio / cipria), listino a schede, prenotazione via WhatsApp.
-   Tema: un solo mondo visivo chiaro, coerente con il logo oro rosa — colori espliciti ovunque. */
+/* Layout: hero con scheda 'prima disponibilità', poi sezioni a banda alterna (bianco / crema), listino a schede, prenotazione via WhatsApp.
+   Tema: bianco e caldo — fondo bianco, bande crema chiaro, accenti caramello/bronzo vicini all'oro rosa del logo. */
 :root{
   color-scheme: light;
-  --paper:#FFFBF8;        /* fondo principale */
-  --blush:#F6E6DD;        /* banda cipria */
-  --blush-deep:#EED3C6;
-  --ink:#2B1F1C;          /* testo, come la scritta del logo */
-  --ink-soft:#6E5A53;
-  --rose:#A8674F;         /* oro rosa scuro, testo su chiaro */
-  --rose-mid:#C98B74;
-  --rose-light:#F1BBA5;
-  --line:#E6CFC4;
+  --paper:#FFFFFF;        /* fondo principale: bianco */
+  --blush:#FAF6F0;        /* banda crema chiaro */
+  --blush-deep:#F1E6D8;
+  --ink:#2E241F;          /* testo, bruno caldo */
+  --ink-soft:#76665B;
+  --rose:#9A6542;         /* caramello scuro, testo su chiaro */
+  --rose-mid:#CFA17A;
+  --rose-light:#EDD3B4;
+  --line:#EEE4D8;
   --wa:#1F8F55;
   --pos:#2B7A50;          /* entrate */
   --neg:#A3452F;          /* uscite */
-  --gold: linear-gradient(100deg,#A8674F 0%,#D9957D 35%,#F3BCA7 55%,#C98B74 75%,#94533F 100%);
+  --gold: linear-gradient(100deg,#9A6542 0%,#C99468 35%,#E8C69E 55%,#BE8B60 75%,#86573A 100%);
   --f-display:"Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
   --f-body:"Montserrat", "Helvetica Neue", Arial, sans-serif;
   --f-script:"Pinyon Script", "Snell Roundhand", "Apple Chancery", cursive;
@@ -38,8 +38,8 @@ p{margin:0}
 .lead{color:var(--ink-soft);max-width:60ch}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:13px 26px;font-family:var(--f-body);font-weight:600;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:0;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease, background-color .2s}
-.btn-gold{background:var(--gold);color:#fff;box-shadow:0 8px 22px -10px rgba(148,83,63,.7);text-shadow:0 1px 1px rgba(110,55,40,.35)}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 26px -10px rgba(148,83,63,.8)}
+.btn-gold{background:var(--gold);color:#fff;box-shadow:0 8px 22px -10px rgba(140,95,55,.6);text-shadow:0 1px 1px rgba(100,65,35,.35)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 26px -10px rgba(140,95,55,.7)}
 .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--rose-mid)}
 .btn-ghost:hover{background:var(--blush)}
 .btn-wa{background:var(--wa);color:#fff}
@@ -53,13 +53,13 @@ section{scroll-margin-top:70px}
 .sec-head .eyebrow{grid-column:1/-1}
 @media (max-width:760px){.band{padding-block:64px}.sec-head{grid-template-columns:1fr;margin-bottom:32px}}
 
-form{background:var(--paper);border-radius:24px;padding:clamp(22px,4vw,40px);display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;box-shadow:0 30px 60px -40px rgba(120,70,50,.45)}
+form{background:var(--paper);border-radius:24px;padding:clamp(22px,4vw,40px);display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;box-shadow:0 30px 60px -40px rgba(120,90,55,.35)}
 .field{display:flex;flex-direction:column;gap:7px;min-width:0}
 .field.full{grid-column:1/-1}
 label,.lbl{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--ink)}
 label small{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink-soft)}
 input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;min-width:0;transition:border-color .2s, box-shadow .2s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--rose-mid);box-shadow:0 0 0 3px rgba(241,187,165,.45)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--rose-mid);box-shadow:0 0 0 3px rgba(237,211,180,.55)}
 textarea{min-height:92px;resize:vertical}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips input{position:absolute;opacity:0;width:1px;height:1px}

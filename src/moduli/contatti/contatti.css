@@ -5,7 +5,7 @@
 .ct-head .script{font-size:2rem;margin-top:-6px}
 .ct-rows{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .ct-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:18px;align-items:center;padding:20px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background-color .2s}
-a.ct-row:hover{background:linear-gradient(90deg,rgba(246,230,221,.7),rgba(246,230,221,0))}
+a.ct-row:hover{background:linear-gradient(90deg,rgba(248,239,227,.8),rgba(248,239,227,0))}
 a.ct-row:hover .ct-go{transform:translateX(4px);color:var(--rose)}
 .ct-ico{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--blush);color:var(--rose)}
 .ct-ico svg{width:22px;height:22px}
@@ -18,7 +18,7 @@ a.ct-row:hover .ct-go{transform:translateX(4px);color:var(--rose)}
 .ct-copy{font:inherit;font-size:.74rem;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
 .ct-copy:hover{border-color:var(--rose-mid);color:var(--rose)}
 .ct-side{display:flex;align-items:center;gap:12px}
-.hours-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px 26px;box-shadow:0 30px 60px -48px rgba(120,70,50,.5);display:flex;flex-direction:column;gap:18px}
+.hours-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px 26px;box-shadow:0 30px 60px -48px rgba(120,90,55,.4);display:flex;flex-direction:column;gap:18px}
 .hc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .hc-top h3{font-size:1.7rem}
 .open-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;font-size:.78rem;font-weight:600;background:var(--blush);color:var(--rose)}

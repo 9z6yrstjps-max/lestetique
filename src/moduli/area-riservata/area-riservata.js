@@ -261,10 +261,10 @@ function drawChart(rows) {
   const ticks = []; for (let v = bot; v <= top + 1; v += step) ticks.push(v);
   const every = Math.ceil(rows.length / Math.floor((W - L) / 46));
   let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Saldo mensile">`;
-  ticks.forEach(v => { svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${v === 0 ? '#C9B3AA' : '#F0E2DA'}" stroke-width="1"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="#6E5A53" font-family="Montserrat, sans-serif">${(v / 100).toLocaleString('it-IT')} €</text>`; });
+  ticks.forEach(v => { svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${v === 0 ? '#CDBBA8' : '#F2E9DE'}" stroke-width="1"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="#76665B" font-family="Montserrat, sans-serif">${(v / 100).toLocaleString('it-IT')} €</text>`; });
   rows.forEach((r, i) => {
     const cx = L + bw * i + bw / 2, y0 = y(0), y1 = y(r.s), h = Math.max(1, Math.abs(y0 - y1)), top_ = Math.min(y0, y1), rad = Math.min(4, barW / 2, h);
-    const fill = r.s >= 0 ? '#C98B74' : '#A3452F';
+    const fill = r.s >= 0 ? '#CFA17A' : '#A3452F';
     // barra con estremità arrotondata lato dato, ancorata alla linea dello zero
     const x0 = cx - barW / 2, x1 = cx + barW / 2;
     const d = r.s >= 0
@@ -272,7 +272,7 @@ function drawChart(rows) {
       : `M${x0},${y0} V${y1 - rad} Q${x0},${y1} ${x0 + rad},${y1} H${x1 - rad} Q${x1},${y1} ${x1},${y1 - rad} V${y0} Z`;
     svg += `<path d="${d}" fill="${fill}" class="bar" data-i="${i}"/>`;
     svg += `<rect x="${L + bw * i}" y="${T}" width="${bw}" height="${H - T - B}" fill="transparent" data-i="${i}" class="hit"/>`;
-    if (i % every === 0) { const [yy, mm] = r.k.split('-'); svg += `<text x="${cx}" y="${H - 14}" text-anchor="middle" font-size="11" fill="#6E5A53" font-family="Montserrat, sans-serif">${MESI[+mm - 1].slice(0, 3)}</text>${+mm === 1 || i === 0 ? `<text x="${cx}" y="${H - 1}" text-anchor="middle" font-size="10" fill="#A08A82" font-family="Montserrat, sans-serif">${yy}</text>` : ''}`; }
+    if (i % every === 0) { const [yy, mm] = r.k.split('-'); svg += `<text x="${cx}" y="${H - 14}" text-anchor="middle" font-size="11" fill="#76665B" font-family="Montserrat, sans-serif">${MESI[+mm - 1].slice(0, 3)}</text>${+mm === 1 || i === 0 ? `<text x="${cx}" y="${H - 1}" text-anchor="middle" font-size="10" fill="#A39282" font-family="Montserrat, sans-serif">${yy}</text>` : ''}`; }
   });
   svg += '</svg><div class="tip" id="tip"></div>';
   el.innerHTML = svg;
