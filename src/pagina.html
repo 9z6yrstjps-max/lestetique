@@ -17,11 +17,23 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
 {{MODULO:header}}
 
 <main>
+<!-- Slider di apertura: hero e trattamenti. Passaparola nascosto per ora: per rimetterlo aggiungi il segnaposto del modulo passaparola dopo la vetrina e il link nel menu (header.html) -->
+<div class="vetrina" id="vetrina" role="region" aria-roledescription="carosello" aria-label="In evidenza">
+  <div class="v-track" id="vTrack" aria-live="off">
 {{MODULO:hero}}
-
-{{MODULO:passaparola}}
-
 {{MODULO:trattamenti}}
+  </div>
+  <div class="v-ctrl">
+    <button type="button" class="v-arrow" id="vPrev" aria-label="Slide precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="v-dots" id="vDots">
+      <button type="button" data-s="0" aria-label="Slide 1: benvenuta" aria-current="true"><i></i></button>
+      <button type="button" data-s="1" aria-label="Slide 2: i trattamenti"><i></i></button>
+    </div>
+    <button type="button" class="v-arrow" id="vNext" aria-label="Slide successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" class="v-play" id="vPlay" aria-label="Ferma lo scorrimento automatico"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M9 6v12M15 6v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="i-play" d="M8 5.5v13l10-6.5z" fill="currentColor"/></svg></button>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 C 260 0, 520 6, 760 30 S 1220 62, 1440 22 L1440 60 L0 60 Z" fill="#FAF6F0"/><path d="M0 34 C 260 0, 520 6, 760 30 S 1220 62, 1440 22" fill="none" stroke="#CFA17A" stroke-width="1.2"/></svg>
+</div>
 
 {{MODULO:listino}}
 

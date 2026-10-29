@@ -1,0 +1,39 @@
+/* Slider di apertura: hero e trattamenti come due slide */
+.vetrina{position:relative;overflow:hidden;overflow:clip;background:var(--paper)}
+.v-track{display:flex;transition:transform .8s cubic-bezier(.65,0,.25,1)}
+.v-track>section{flex:0 0 100%;min-width:0;display:grid;align-content:center;transition:opacity .6s ease}
+.v-track>section[aria-hidden="true"]{opacity:0}
+.vetrina .hero .wrap{padding-block:56px 32px}
+.vetrina #trattamenti{padding-block:56px 32px;background:transparent}
+.vetrina #trattamenti .sec-head{margin-bottom:24px}
+.vetrina #trattamenti h2{font-size:clamp(2rem,3.6vw,2.6rem)}
+.vetrina .cat{padding:22px 24px;gap:8px}
+.vetrina .cat-ico{width:38px;height:38px}
+.vetrina .cat-meta{padding-top:4px}
+.v-ctrl{display:flex;justify-content:center;align-items:center;gap:10px;padding:0 20px 12px}
+.v-arrow,.v-play{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .2s,color .2s}
+.v-arrow:hover,.v-play:hover{border-color:var(--rose-mid);color:var(--rose)}
+.v-arrow svg,.v-play svg{width:18px;height:18px}
+.v-play{width:32px;height:32px;margin-left:6px;border-color:transparent;background:transparent;color:var(--ink-soft)}
+.v-play svg{width:14px;height:14px}
+.v-play .i-play{display:none}
+.vetrina.stopped .v-play .i-play{display:inline}
+.vetrina.stopped .v-play .i-pause{display:none}
+.v-dots{display:flex;gap:2px}
+.v-dots button{width:52px;height:40px;border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center}
+.v-dots i{display:block;width:22px;height:3px;border-radius:2px;background:var(--line);overflow:hidden;position:relative;transition:width .3s}
+.v-dots button[aria-current="true"] i{width:40px;background:var(--rose-light)}
+.v-dots button[aria-current="true"] i::after{content:"";position:absolute;inset:0;background:var(--rose-mid);transform-origin:left;animation:vprog 8s linear forwards}
+.vetrina.hold .v-dots i::after{animation-play-state:paused}
+.vetrina.stopped .v-dots i::after{animation:none}
+@keyframes vprog{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.vetrina .wave{margin-top:-8px}
+@media (max-width:860px){.vetrina .hero .wrap{padding-block:32px 24px}.vetrina #trattamenti{padding-block:36px 24px}}
+@media (max-width:560px){
+  .vetrina .cats{grid-template-columns:1fr 1fr}
+  .vetrina .cat{padding:18px 16px;gap:8px}
+  .vetrina .cat p{display:none}
+  .vetrina .cat h3{font-size:1.15rem}
+  .vetrina .cat-ico{width:34px;height:34px}
+  .vetrina .cat-meta{flex-direction:column;align-items:flex-start;gap:2px;font-size:.7rem}
+}

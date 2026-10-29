@@ -21,7 +21,7 @@
 
 /* area riservata */
 .nav .back{display:none}
-body.private main>section:not(#riservata),body.private .fab,body.private .wave{display:none!important}
+body.private main>section:not(#riservata),body.private .vetrina,body.private .fab,body.private .wave{display:none!important}
 body.private .nav a{display:none}
 body.private .nav .back{display:inline-flex}
 body.private footer .script{display:none}

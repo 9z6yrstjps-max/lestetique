@@ -1,5 +1,5 @@
 /* Privacy e cookie */
-body.legal main>section:not(#privacy),body.legal .fab{display:none!important}
+body.legal main>section:not(#privacy),body.legal .vetrina,body.legal .fab{display:none!important}
 body.legal .nav a{display:none}
 body.legal .nav .back{display:inline-flex}
 .legal-page{padding-block:48px 88px;background:var(--paper)}
