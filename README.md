@@ -6,4 +6,4 @@ Sito one-page dello studio estetico a San Giorgio del Sannio (BN).
 - `fonts/` — caratteri ospitati in locale (licenza SIL OFL, vedi `fonts/OFL-LICENSE.txt`)
 
 Pubblicato con GitHub Pages: ogni modifica al ramo `main` va online in automatico.
-Le prenotazioni dal sito pubblico partono su WhatsApp; agenda e registro di cassa restano nell'area riservata su Claude.
+Prenotazioni, agenda e registro di cassa usano Supabase (login per l'area riservata). `vendor/supabase.js` è la libreria supabase-js 2.117.3 (licenza MIT).
