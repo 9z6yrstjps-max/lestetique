@@ -434,6 +434,8 @@ body.legal .nav .back{display:inline-flex}
 .users th{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
 .users tr:last-child td{border-bottom:0}
 .users select{width:auto;min-width:170px;padding:8px 12px}
+.users .name-in{width:100%;min-width:110px;padding:8px 10px}
+.users{min-width:640px}
 .users .tag{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;background:var(--blush);color:var(--rose);border-radius:999px;padding:2px 8px;margin-left:6px}
 .help-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px;font-size:.88rem}
 .help-card p{margin:0;color:var(--ink-soft)} .help-card b{color:var(--ink)}
@@ -722,8 +724,8 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
     <div class="view" id="view-utenti" hidden>
       <div class="admin-grid">
         <div class="table-wrap"><table class="users">
-          <thead><tr><th scope="col">Account</th><th scope="col">Ultimo accesso</th><th scope="col">Ruolo</th></tr></thead>
-          <tbody id="usersBody"><tr><td colspan="3" class="cap-note">Carico gli utenti…</td></tr></tbody>
+          <thead><tr><th scope="col">Nome</th><th scope="col">Account</th><th scope="col">Ultimo accesso</th><th scope="col">Ruolo</th></tr></thead>
+          <tbody id="usersBody"><tr><td colspan="4" class="cap-note">Carico gli utenti…</td></tr></tbody>
         </table></div>
         <aside class="help-card">
           <p class="lbl">I ruoli</p>
@@ -1602,12 +1604,12 @@ const ROLE_LABEL = { admin: 'Amministratore', editor: 'Editor' };
 let usersCache = [];
 async function loadUsers() {
   const { data, error } = await sb.rpc('staff_list');
-  if (error) { $('usersBody').innerHTML = '<tr><td colspan="3" class="cap-note">Non riesco a leggere gli utenti.</td></tr>'; return; }
+  if (error) { $('usersBody').innerHTML = '<tr><td colspan="4" class="cap-note">Non riesco a leggere gli utenti.</td></tr>'; return; }
   usersCache = data;
   $('usersBody').innerHTML = data.map(u => {
     const me = u.user_id === area.uid;
     const last = u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleString('it-IT', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'mai';
-    return `<tr><td><b>${esc(u.email)}</b>${me ? ' <span class="tag">tu</span>' : ''}</td><td>${last}</td><td>
+    return `<tr><td><input class="name-in" data-name="${u.user_id}" value="${esc(u.name || '')}" placeholder="${u.role ? 'Nome' : '—'}" ${u.role ? '' : 'disabled'} maxlength="40" aria-label="Nome di ${esc(u.email)}"></td><td><b>${esc(u.email)}</b>${me ? ' <span class="tag">tu</span>' : ''}</td><td>${last}</td><td>
       <select data-user="${u.user_id}" ${me ? 'disabled title="Non puoi cambiare il tuo ruolo"' : ''} aria-label="Ruolo di ${esc(u.email)}">
         <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Amministratore</option>
         <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>Editor</option>
@@ -1616,6 +1618,13 @@ async function loadUsers() {
   }).join('');
 }
 $('usersBody').addEventListener('change', async e => {
+  const n = e.target.closest('input[data-name]');
+  if (n) {
+    const { error } = await sb.rpc('set_name', { p_user: n.dataset.name, p_name: n.value });
+    say(error ? 'Non sono riuscita a salvare il nome' : 'Nome salvato');
+    if (!error && n.dataset.name === area.uid) $('areaTitle').textContent = n.value.trim() ? 'Ciao ' + n.value.trim() : 'Bentornato';
+    return;
+  }
   const s = e.target.closest('select[data-user]'); if (!s) return;
   s.disabled = true;
   const { error } = await sb.rpc('set_role', { p_user: s.dataset.user, p_role: s.value || null });
@@ -1645,6 +1654,7 @@ function describe(a) {
   if (a.entity === 'staff') {
     const who = esc(emailOf(x.user_id));
     if (a.action === 'delete') return `Ha tolto l'accesso a ${who}`;
+    if (a.action === 'update' && d.role === o.role) return `Ha impostato il nome di ${who}: ${esc(d.name || '—')}`;
     return `Ha impostato ${who} come ${ROLE_LABEL[d.role] || d.role}`;
   }
   return `${a.action} ${a.entity}`;
@@ -1699,10 +1709,11 @@ async function loadAgendaDetails() {
 }
 async function enterArea(session) {
   if (!session) { area.ok = false; showLogin(); return; }
-  const { data: role } = await sb.rpc('my_role');
+  const { data: prof } = await sb.rpc('my_profile');
+  const role = prof && prof[0] && prof[0].role, myName = prof && prof[0] && prof[0].name;
   if (!role) { setLocked('Accesso non autorizzato', "Questo account non ha ancora un ruolo. Chiedi all'amministratore di assegnartelo."); $('loginForm').hidden = true; $('logoutBtn').hidden = false; return; }
   area.ok = true; area.role = role; area.uid = session.user.id; area.email = session.user.email || '';
-  { const n = (area.email.split('@')[0].split(/[._-]/)[0] || ''); $('areaTitle').textContent = n ? 'Ciao ' + n[0].toUpperCase() + n.slice(1) : 'Bentornata'; }
+  $('areaTitle').textContent = myName ? 'Ciao ' + myName : 'Bentornato';
   $('roleNote').textContent = (role === 'admin' ? 'Amministratore' : 'Editor') + ' · ' + area.email;
   $('areaLink').classList.add('is-admin'); $('logoutBtn').hidden = false; $('loginForm').hidden = true;
   await refreshSlots(); await loadAgendaDetails(); loadCassa();
