@@ -154,7 +154,7 @@ $('bookForm').addEventListener('submit', async e => {
       <p><b>${longDate(booking.date)}, ore ${hm(booking.start)}</b><br>${esc(booking.treatments.join(' + '))}</p>
       <p class="small">È già nell'agenda di Paola. Se vuoi, avvisala anche su WhatsApp.</p>
       <div class="c-actions"><button type="button" class="btn btn-gold" data-cal="${booking.id}">${CAL_ICON}Salva nel calendario</button><a class="btn btn-wa" href="${waLink(text)}" target="_blank" rel="noopener">${WA_ICON}Avvisa Paola</a></div>
-      <p class="small cal-hint">${calHint()}</p>`);
+      <p class="small cal-hint">${calHint()}${useGoogle() ? '' : ` Non si apre? <a href="${googleCalUrl({ ...CAL_SEEN[booking.id] })}" target="_blank" rel="noopener">Usa Google Calendar</a>.`}</p>`);
     state.picked = []; state.time = null; $('f-notes').value = ''; $('f-promo').checked = $('f-sumisura').checked = false; renderPicked();
   } catch (err) {
     if (err && err.code === 'taken') {
@@ -227,18 +227,31 @@ $('mineList').addEventListener('click', async e => {
 });
 
 /* ---------- Salva l'appuntamento nel calendario del telefono ----------
-   iPhone/iPad e computer: file .ics (si apre «Aggiungi al calendario», con due promemoria).
-   Android: Google Calendar con l'evento già compilato. Serve sempre un tocco della cliente per confermare. */
+   iPhone/iPad in Safari e computer: file .ics (si apre «Aggiungi al calendario», con due promemoria).
+   Android e browser iPhone diversi da Safari (Chrome, Firefox...): Google Calendar già compilato.
+   Serve sempre un tocco della cliente per confermare. */
 const STUDIO_ADDR = 'Via Mario Lanzotti 1, 82018 San Giorgio del Sannio (BN)';
 const CAL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>';
-const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isAndroid = () => /Android/i.test(navigator.userAgent);
+const UA = navigator.userAgent;
+const isIOS = () => /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isAndroid = () => /Android/i.test(UA);
+const iosOtherBrowser = () => isIOS() && /CriOS|FxiOS|EdgiOS|OPiOS/.test(UA);           // su iPhone solo Safari apre i file .ics
+const inAppBrowser = () => /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Line\//i.test(UA);  // browser interni delle app social
+const useGoogle = () => isAndroid() || iosOtherBrowser() || inAppBrowser();
 function calHint() {
-  return isAndroid() ? 'Si apre Google Calendar con l\'appuntamento già compilato: tocca «Salva».'
-    : isIOS() ? 'Si apre il Calendario con l\'appuntamento già compilato: tocca «Aggiungi». Ti ricorda l\'appuntamento il giorno prima e due ore prima.'
+  return useGoogle() ? 'Si apre Google Calendar con l\'appuntamento già compilato: tocca «Salva».'
+    : isIOS() ? 'Si apre la scheda del Calendario con l\'appuntamento già compilato: tocca «Aggiungi». Ti ricorda l\'appuntamento il giorno prima e due ore prima.'
     : 'Scarica il file e aprilo: l\'appuntamento si aggiunge al tuo calendario, con promemoria il giorno prima e due ore prima.';
 }
 function calStamp(date, min) { return date.replace(/-/g, '') + 'T' + pad(Math.floor(min / 60)) + pad(min % 60) + '00'; }
+/* ora di Roma → UTC (gestisce da solo ora legale e solare) */
+function romeUtc(date, min) {
+  const [y, m, d] = date.split('-').map(Number), guess = Date.UTC(y, m - 1, d, Math.floor(min / 60), min % 60);
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+    .formatToParts(new Date(guess)).map(x => [x.type, x.value]));
+  const wall = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute);
+  return new Date(guess - (wall - guess)).toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+}
 function calData(b) {
   const what = b.treatments.join(' + ');
   return { title: `L'Estetique · ${what}`, start: calStamp(b.date, b.start), end: calStamp(b.date, b.end),
@@ -246,28 +259,34 @@ function calData(b) {
 }
 function icsText(b) {
   const c = calData(b), e = s => s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
+  const fold = l => { let out = '', r = l; while (r.length > 70) { out += r.slice(0, 70) + '\r\n '; r = r.slice(70); } return out + r; };
   const now = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
   return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//L\'Estetique//Prenotazioni//IT', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT', `UID:${b.id || now}@lestetique`, `DTSTAMP:${now}`,
-    `DTSTART;TZID=Europe/Rome:${c.start}`, `DTEND;TZID=Europe/Rome:${c.end}`,
+    `DTSTART:${romeUtc(b.date, b.start)}`, `DTEND:${romeUtc(b.date, b.end)}`,
     `SUMMARY:${e(c.title)}`, `LOCATION:${e(STUDIO_ADDR)}`, `DESCRIPTION:${e(c.details)}`,
-    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${e(c.title)}`, 'TRIGGER:-P1D', 'END:VALARM',
-    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${e(c.title)}`, 'TRIGGER:-PT2H', 'END:VALARM',
-    'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Promemoria', 'TRIGGER:-P1D', 'END:VALARM',
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Promemoria', 'TRIGGER:-PT2H', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'].map(fold).join('\r\n') + '\r\n';
+}
+function googleCalUrl(b) {
+  const c = calData(b);
+  return 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: c.title, dates: `${c.start}/${c.end}`, ctz: 'Europe/Rome', location: STUDIO_ADDR, details: c.details }).toString();
 }
 function addToCalendar(b) {
-  if (isAndroid()) {
-    const c = calData(b);
-    const q = new URLSearchParams({ action: 'TEMPLATE', text: c.title, dates: `${c.start}/${c.end}`, ctz: 'Europe/Rome', location: STUDIO_ADDR, details: c.details });
-    window.open('https://calendar.google.com/calendar/render?' + q.toString(), '_blank', 'noopener');
-    return;
-  }
-  const ics = icsText(b);
-  if (isIOS()) { location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics); return; }
+  if (useGoogle()) { window.open(googleCalUrl(b), '_blank', 'noopener'); return; }
+  const ics = icsText(b), name = `appuntamento-lestetique-${b.date}.ics`;
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
-  a.download = `appuntamento-lestetique-${b.date}.ics`; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  if (isIOS()) {
+    // Safari su iPhone: link al file con download + nuova scheda → compare «Aggiungi al calendario»
+    a.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    a.target = '_blank';
+  } else {
+    a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  a.download = name; a.rel = 'noopener'; a.style.display = 'none';
+  document.body.appendChild(a); a.click(); a.remove();
 }
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-cal]'); if (!btn) return;
