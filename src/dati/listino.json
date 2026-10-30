@@ -3,7 +3,6 @@
  "categorie": [
   {"id": "mani", "titolo_breve": "Mani e piedi", "titolo": "Mani, piedi e unghie", "icona": "mani",
    "descrizione": "Manicure, pedicure estetico e curativo, semipermanente, ricostruzione e refill in gel o Acrygel.",
-   "nota_in_fondo": "<span><b>One Step</b> · smalto semipermanente in un solo passaggio</span><span><b>Baby Boomer</b> · sfumatura dal rosa al bianco</span>",
    "gruppi": [
     {"gruppo": "Mani", "trattamenti": [
      {"nome": "Manicure", "prezzo": 12, "minuti": 30},
