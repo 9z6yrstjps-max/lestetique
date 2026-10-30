@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://9z6yrstjps-max.github.io/lestetique/sitemap.xml

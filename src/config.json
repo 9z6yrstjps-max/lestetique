@@ -1,1 +1,9 @@
-{"supabase_url":"https://debyvfppepfxzxehynks.supabase.co","supabase_key":"sb_publishable_aEA55J8m6xZ5MQbLN8tq0A_UhtCrC66"}
+{
+  "supabase_url": "https://debyvfppepfxzxehynks.supabase.co",
+  "supabase_key": "sb_publishable_aEA55J8m6xZ5MQbLN8tq0A_UhtCrC66",
+  "site_url": "https://9z6yrstjps-max.github.io/lestetique/",
+  "_nota_site_url": "Indirizzo pubblico del sito, con / finale. Quando arriva il dominio (es. https://www.lestetique.it/) cambialo qui e rifai build: si aggiornano sitemap.xml, robots.txt e i dati per Google.",
+  "verifica_google": "",
+  "verifica_bing": "",
+  "_nota_verifica": "Codici di verifica (solo il valore content=\"...\") dati da Google Search Console e Bing Webmaster Tools."
+}

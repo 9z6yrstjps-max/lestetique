@@ -103,6 +103,56 @@ def social_links(cls):
     return f'<div class="{cls}"><span>{label}</span><nav aria-label="Profili social">{"".join(items)}</nav>{note}</div>'
 
 
+def seo(cfg):
+    """Indirizzo canonico, anteprima per i social, dati strutturati per Google (attività locale) e codici di verifica."""
+    url = cfg.get('site_url', '').strip()
+    out = []
+    if url:
+        out.append(f'<link rel="canonical" href="{url}">')
+        out.append('<meta property="og:type" content="website">')
+        out.append(f'<meta property="og:url" content="{url}">')
+    out.append('<meta property="og:title" content="L\'Estetique · Bellezza e Benessere di Paola Parisio">')
+    out.append('<meta property="og:description" content="Centro estetico a San Giorgio del Sannio (BN): mani e piedi, unghie, epilazione, massaggi, viso e make-up. Prenota online.">')
+    out.append('<meta property="og:locale" content="it_IT">')
+    if cfg.get('verifica_google', '').strip():
+        out.append(f'<meta name="google-site-verification" content="{cfg["verifica_google"].strip()}">')
+    if cfg.get('verifica_bing', '').strip():
+        out.append(f'<meta name="msvalidate.01" content="{cfg["verifica_bing"].strip()}">')
+    day = lambda d: 'https://schema.org/' + d
+    data = {
+        '@context': 'https://schema.org', '@type': 'BeautySalon',
+        'name': "L'Estetique, Bellezza e Benessere di Paola Parisio", 'alternateName': "L'Estetique",
+        'telephone': '+39 393 007 6415', 'priceRange': '€',
+        'address': {'@type': 'PostalAddress', 'streetAddress': 'Via Mario Lanzotti, 1', 'postalCode': '82018',
+                    'addressLocality': 'San Giorgio del Sannio', 'addressRegion': 'BN', 'addressCountry': 'IT'},
+        'openingHoursSpecification': [
+            {'@type': 'OpeningHoursSpecification', 'dayOfWeek': [day(d) for d in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')], 'opens': '09:00', 'closes': '13:00'},
+            {'@type': 'OpeningHoursSpecification', 'dayOfWeek': [day(d) for d in ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')], 'opens': '15:00', 'closes': '19:00'},
+            {'@type': 'OpeningHoursSpecification', 'dayOfWeek': day('Saturday'), 'opens': '09:00', 'closes': '13:00'}],
+    }
+    if url:
+        data['url'] = url
+    out.append('<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>')
+    return '\n'.join(out)
+
+
+def write_sitemap(cfg):
+    """sitemap.xml e robots.txt (con l'indirizzo della mappa) per Google e Bing."""
+    url = cfg.get('site_url', '').strip()
+    if not url:
+        return
+    import datetime
+    today = datetime.date.today().isoformat()
+    sitemap = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+               f'  <url><loc>{url}</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>\n'
+               '</urlset>\n')
+    with open(os.path.join(ROOT, 'sitemap.xml'), 'w', encoding='utf-8') as f:
+        f.write(sitemap)
+    with open(os.path.join(ROOT, 'robots.txt'), 'w', encoding='utf-8') as f:
+        f.write(f'User-agent: *\nAllow: /\n\nSitemap: {url}sitemap.xml\n')
+
+
 def fonts_css():
     return '<style>' + '\n'.join(
         f"@font-face{{font-family:'{fam}';font-style:{st};font-weight:{w};font-display:swap;src:url(fonts/{f}.woff2) format('woff2')}}"
@@ -119,7 +169,7 @@ def build():
     page = page.replace('{{CSS}}', css).replace('{{JS}}', js)
     page = re.sub(r'\{\{MODULO:([a-z-]+)\}\}', lambda m: read(MOD, m.group(1), m.group(1) + '.html').rstrip('\n'), page)
 
-    page = (page.replace('{{FONTS}}', fonts_css())
+    page = (page.replace('{{SEO}}', seo(cfg)).replace('{{FONTS}}', fonts_css())
                 .replace('{{LOGO}}', img_uri('logo.png')).replace('{{MONO}}', img_uri('mono.png')).replace('{{ART}}', img_uri('art.png'))
                 .replace('{{WA_ICON_JS}}', json.dumps(wa)).replace('{{WA_ICON}}', wa)
                 .replace('{{SOCIAL_CONTATTI}}', social_links('ct-social')).replace('{{SOCIAL_FOOTER}}', social_links('foot-social'))
@@ -130,6 +180,7 @@ def build():
         raise SystemExit('Segnaposto non sostituiti: ' + ', '.join(left))
     with open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8') as f:
         f.write(page)
+    write_sitemap(cfg)
     print(f'index.html scritto ({len(page) // 1024} KB)')
 
 
