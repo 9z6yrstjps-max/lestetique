@@ -215,7 +215,7 @@ textarea{min-height:92px;resize:vertical}
 
 /* Slider di apertura: hero e trattamenti come due slide */
 .vetrina{position:relative;overflow:hidden;overflow:clip;background:var(--paper)}
-.v-track{display:flex;transition:transform .8s cubic-bezier(.65,0,.25,1)}
+.v-track{display:flex;align-items:flex-start;transition:transform .8s cubic-bezier(.65,0,.25,1),height .6s ease}
 .v-track>section{flex:0 0 100%;min-width:0;display:grid;align-content:center;transition:opacity .6s ease}
 .v-track>section[aria-hidden="true"]{opacity:0}
 .vetrina .hero .wrap{padding-block:56px 32px}
@@ -239,7 +239,7 @@ textarea{min-height:92px;resize:vertical}
 .v-dots i{display:block;width:22px;height:3px;border-radius:2px;background:var(--line);overflow:hidden;position:relative;transition:width .3s}
 .v-dots button[aria-current="true"] i{width:40px;background:var(--rose-light)}
 .v-dots button[aria-current="true"] i::after{content:"";position:absolute;inset:0;background:var(--rose-mid);transform-origin:left;animation:vprog 8s linear forwards}
-.vetrina.hold .v-dots i::after{animation-play-state:paused}
+.vetrina.hold .v-dots i::after,.vetrina.away .v-dots i::after{animation-play-state:paused}
 .vetrina.stopped .v-dots i::after{animation:none}
 @keyframes vprog{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .vetrina .wave{margin-top:-8px}
@@ -649,6 +649,60 @@ footer .script{color:var(--rose-light);font-size:1.9rem}
 .foot-social .soc-ico img{width:20px;height:20px}
 .foot-social nav{align-items:center}
 .foot-social .soon-note{color:var(--rose-light)}
+
+/* Smartphone: contenuti centrati nelle sezioni pubbliche (l'area riservata resta allineata a sinistra).
+   I moduli di inserimento (prenotazione) restano allineati a sinistra per comodità di compilazione. */
+@media (max-width:760px){
+  /* intestazioni di sezione */
+  main .sec-head{text-align:center;justify-items:center}
+  main .sec-head .lead{margin-inline:auto}
+
+  /* apertura */
+  .hero-copy{text-align:center;align-items:center}
+  .hero .lead{margin-inline:auto}
+  .hero .script{transform:rotate(-3deg);transform-origin:center}
+  .hero-cta{justify-content:center;flex-direction:column;align-items:stretch;width:100%;max-width:340px}
+  .nc-head{justify-content:center;gap:14px}
+  .nc-note{justify-content:center}
+
+  /* trattamenti */
+  .cat{align-items:center;text-align:center}
+  .cat-meta{justify-content:center;gap:10px}
+
+  /* listino */
+  .tabs{justify-content:center}
+  .group h3{justify-content:center;flex-wrap:wrap;text-align:center}
+  .menu-note{justify-content:center;text-align:center}
+
+  /* prenota: introduzione centrata, modulo a sinistra */
+  .book-intro{text-align:center;align-items:center}
+  .steps{align-items:center}
+  .steps li{grid-template-columns:1fr;justify-items:center;gap:8px;max-width:320px}
+  .mine{text-align:left;align-self:stretch}
+  #bookForm .form-actions{flex-direction:column;align-items:stretch;text-align:center}
+  #bookForm .form-actions small{min-width:0}
+
+  /* contatti */
+  .ct-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:10px}
+  .ct-act{margin-top:4px}
+  .ct-social{justify-content:center;text-align:center}
+  .ct-social>span{flex-basis:100%}
+  .ct-social nav{justify-content:center}
+  .hc-top{flex-direction:column;align-items:center;gap:4px}
+  .hours-card .open-pill{align-self:center}
+
+  /* footer */
+  footer .wrap{justify-items:center;text-align:center}
+  .foot-social{justify-content:center}
+  .foot-social>span{flex-basis:100%}
+  .foot-social nav{justify-content:center}
+}
+@media (max-width:560px){
+  /* contatti: le regole "telefono piccolo" del modulo mettevano il pulsante in seconda colonna */
+  .ct-card{grid-template-columns:1fr;padding:24px 20px}
+  .ct-act{grid-column:auto}
+  .vetrina .cat-meta{align-items:center}
+}
 
 </style>
 </head>
@@ -2179,7 +2233,13 @@ function vGo(i) {
   $('vTrack').style.transform = `translateX(${-100 * V.i}%)`;
   V.slides.forEach((s, k) => { const on = k === V.i; s.inert = !on; s.setAttribute('aria-hidden', String(!on)); });
   [...$('vDots').children].forEach((b, k) => b.setAttribute('aria-current', String(k === V.i)));
+  vFit();
 }
+/* l'altezza segue la slide attiva (sul telefono hero e trattamenti sono molto diverse: niente spazi vuoti) */
+function vFit() { $('vTrack').style.height = V.slides[V.i].offsetHeight + 'px'; }
+if (window.ResizeObserver) { const ro = new ResizeObserver(vFit); V.slides.forEach(s => ro.observe(s)); } else addEventListener('resize', vFit);
+/* scorre da solo solo quando lo slider è ben visibile, così il resto della pagina non si sposta mentre si legge */
+if (window.IntersectionObserver) new IntersectionObserver(([e]) => $('vetrina').classList.toggle('away', e.intersectionRatio < 0.6), { threshold: [0, 0.6, 1] }).observe($('vetrina'));
 $('vPrev').addEventListener('click', () => vGo(V.i - 1));
 $('vNext').addEventListener('click', () => vGo(V.i + 1));
 $('vDots').addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (b) vGo(+b.dataset.s); });

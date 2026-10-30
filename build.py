@@ -19,7 +19,7 @@ MOD = os.path.join(SRC, 'moduli')
 
 # Ordine in cui si sommano gli stili (conta: quelli dopo possono ritoccare quelli prima)
 CSS_ORDER = ['base', 'header', 'hero', 'passaparola', 'trattamenti', 'slider', 'listino', 'prenota',
-             'contatti', 'privacy', 'area-riservata', 'footer']
+             'contatti', 'privacy', 'area-riservata', 'footer', 'mobile']
 # Ordine degli script (conta: alcuni usano funzioni e dati definiti nei precedenti)
 JS_ORDER = ['base/core', 'listino/listino', 'prenota/prenota', 'area-riservata/area-riservata',
             'area-riservata/utenti', 'area-riservata/clienti', 'hero/hero', 'slider/slider', 'base/avvio', 'base/supabase', 'contatti/contatti']

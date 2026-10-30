@@ -1,0 +1,53 @@
+/* Smartphone: contenuti centrati nelle sezioni pubbliche (l'area riservata resta allineata a sinistra).
+   I moduli di inserimento (prenotazione) restano allineati a sinistra per comodità di compilazione. */
+@media (max-width:760px){
+  /* intestazioni di sezione */
+  main .sec-head{text-align:center;justify-items:center}
+  main .sec-head .lead{margin-inline:auto}
+
+  /* apertura */
+  .hero-copy{text-align:center;align-items:center}
+  .hero .lead{margin-inline:auto}
+  .hero .script{transform:rotate(-3deg);transform-origin:center}
+  .hero-cta{justify-content:center;flex-direction:column;align-items:stretch;width:100%;max-width:340px}
+  .nc-head{justify-content:center;gap:14px}
+  .nc-note{justify-content:center}
+
+  /* trattamenti */
+  .cat{align-items:center;text-align:center}
+  .cat-meta{justify-content:center;gap:10px}
+
+  /* listino */
+  .tabs{justify-content:center}
+  .group h3{justify-content:center;flex-wrap:wrap;text-align:center}
+  .menu-note{justify-content:center;text-align:center}
+
+  /* prenota: introduzione centrata, modulo a sinistra */
+  .book-intro{text-align:center;align-items:center}
+  .steps{align-items:center}
+  .steps li{grid-template-columns:1fr;justify-items:center;gap:8px;max-width:320px}
+  .mine{text-align:left;align-self:stretch}
+  #bookForm .form-actions{flex-direction:column;align-items:stretch;text-align:center}
+  #bookForm .form-actions small{min-width:0}
+
+  /* contatti */
+  .ct-card{grid-template-columns:1fr;justify-items:center;text-align:center;gap:10px}
+  .ct-act{margin-top:4px}
+  .ct-social{justify-content:center;text-align:center}
+  .ct-social>span{flex-basis:100%}
+  .ct-social nav{justify-content:center}
+  .hc-top{flex-direction:column;align-items:center;gap:4px}
+  .hours-card .open-pill{align-self:center}
+
+  /* footer */
+  footer .wrap{justify-items:center;text-align:center}
+  .foot-social{justify-content:center}
+  .foot-social>span{flex-basis:100%}
+  .foot-social nav{justify-content:center}
+}
+@media (max-width:560px){
+  /* contatti: le regole "telefono piccolo" del modulo mettevano il pulsante in seconda colonna */
+  .ct-card{grid-template-columns:1fr;padding:24px 20px}
+  .ct-act{grid-column:auto}
+  .vetrina .cat-meta{align-items:center}
+}

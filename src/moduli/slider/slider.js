@@ -7,7 +7,13 @@ function vGo(i) {
   $('vTrack').style.transform = `translateX(${-100 * V.i}%)`;
   V.slides.forEach((s, k) => { const on = k === V.i; s.inert = !on; s.setAttribute('aria-hidden', String(!on)); });
   [...$('vDots').children].forEach((b, k) => b.setAttribute('aria-current', String(k === V.i)));
+  vFit();
 }
+/* l'altezza segue la slide attiva (sul telefono hero e trattamenti sono molto diverse: niente spazi vuoti) */
+function vFit() { $('vTrack').style.height = V.slides[V.i].offsetHeight + 'px'; }
+if (window.ResizeObserver) { const ro = new ResizeObserver(vFit); V.slides.forEach(s => ro.observe(s)); } else addEventListener('resize', vFit);
+/* scorre da solo solo quando lo slider è ben visibile, così il resto della pagina non si sposta mentre si legge */
+if (window.IntersectionObserver) new IntersectionObserver(([e]) => $('vetrina').classList.toggle('away', e.intersectionRatio < 0.6), { threshold: [0, 0.6, 1] }).observe($('vetrina'));
 $('vPrev').addEventListener('click', () => vGo(V.i - 1));
 $('vNext').addEventListener('click', () => vGo(V.i + 1));
 $('vDots').addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (b) vGo(+b.dataset.s); });

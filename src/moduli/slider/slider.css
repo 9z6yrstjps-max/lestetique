@@ -1,6 +1,6 @@
 /* Slider di apertura: hero e trattamenti come due slide */
 .vetrina{position:relative;overflow:hidden;overflow:clip;background:var(--paper)}
-.v-track{display:flex;transition:transform .8s cubic-bezier(.65,0,.25,1)}
+.v-track{display:flex;align-items:flex-start;transition:transform .8s cubic-bezier(.65,0,.25,1),height .6s ease}
 .v-track>section{flex:0 0 100%;min-width:0;display:grid;align-content:center;transition:opacity .6s ease}
 .v-track>section[aria-hidden="true"]{opacity:0}
 .vetrina .hero .wrap{padding-block:56px 32px}
@@ -24,7 +24,7 @@
 .v-dots i{display:block;width:22px;height:3px;border-radius:2px;background:var(--line);overflow:hidden;position:relative;transition:width .3s}
 .v-dots button[aria-current="true"] i{width:40px;background:var(--rose-light)}
 .v-dots button[aria-current="true"] i::after{content:"";position:absolute;inset:0;background:var(--rose-mid);transform-origin:left;animation:vprog 8s linear forwards}
-.vetrina.hold .v-dots i::after{animation-play-state:paused}
+.vetrina.hold .v-dots i::after,.vetrina.away .v-dots i::after{animation-play-state:paused}
 .vetrina.stopped .v-dots i::after{animation:none}
 @keyframes vprog{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .vetrina .wave{margin-top:-8px}
