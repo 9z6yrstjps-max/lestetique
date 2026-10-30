@@ -21,6 +21,8 @@
   .tabs{justify-content:center}
   .group h3{justify-content:center;flex-wrap:wrap;text-align:center}
   .menu-note{justify-content:center;text-align:center}
+  .menu-dur{text-align:center}
+  .items .d{display:block;margin:3px 0 0}
 
   /* prenota: introduzione centrata, modulo a sinistra */
   .book-intro{text-align:center;align-items:center}

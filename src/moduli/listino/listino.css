@@ -1,3 +1,4 @@
+:root{--clock:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E")}
 /* Listino prezzi a schede */
 /* listino */
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
@@ -12,6 +13,9 @@
 .items li{display:flex;align-items:baseline;gap:10px;padding:9px 0;font-size:.95rem}
 .items li:last-child{border-bottom:0}
 .items .n{min-width:0}
+.items .d{display:inline-block;margin-left:10px;font-size:.74rem;letter-spacing:.04em;color:var(--ink-soft);white-space:nowrap}
+.items .d::before{content:"";display:inline-block;width:.85em;height:.85em;margin-right:4px;vertical-align:-.1em;background:currentColor;opacity:.75;-webkit-mask:var(--clock) center/contain no-repeat;mask:var(--clock) center/contain no-repeat}
+.menu-dur{margin:18px 0 0;font-size:.78rem;color:var(--ink-soft)}
 .items .dots{flex:1;border-bottom:1px dotted var(--rose-light);transform:translateY(-4px);min-width:16px}
 .items .p{font-family:var(--f-display);font-size:1.3rem;font-weight:600;color:var(--rose);font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
 .items .p span{font-size:.8em;margin-right:2px}

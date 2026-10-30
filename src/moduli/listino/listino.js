@@ -1,3 +1,6 @@
+/* Durata leggibile: 45 min, 1 h, 1 h 30 */
+const durata = m => m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) : ''}`;
+
 /* Categorie: card + tab */
 const cats = document.getElementById('cats');
 const tabs = document.getElementById('tabs');
@@ -24,9 +27,10 @@ function select(i){
   menu.setAttribute('aria-labelledby', 'tab-' + c.id);
   menu.innerHTML = `<div class="groups">${c.groups.map(g => `
     <div class="group">${g.name ? `<h3>${g.name}${g.note ? `<small>${g.note}</small>` : ''}</h3>` : ''}
-      <ul class="items">${g.items.map(x => `<li><span class="n">${x.name}</span><span class="dots"></span><span class="p">${eur(x.price)}</span></li>`).join('')}</ul>
+      <ul class="items">${g.items.map(x => `<li><span class="n">${x.name}${x.min ? `<small class="d">${durata(x.min)}</small>` : ''}</span><span class="dots"></span><span class="p">${eur(x.price)}</span></li>`).join('')}</ul>
     </div>`).join('')}</div>
-    ${c.foot ? `<div class="menu-note">${c.foot}</div>` : ''}`;
+    ${c.foot ? `<div class="menu-note">${c.foot}</div>` : ''}
+    <p class="menu-dur">Le durate sono indicative e possono variare da persona a persona.</p>`;
 }
 tabs.addEventListener('keydown', e => {
   const btns = [...tabs.children]; const k = btns.indexOf(document.activeElement);
