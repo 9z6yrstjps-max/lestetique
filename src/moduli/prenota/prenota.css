@@ -72,3 +72,9 @@ label.check b{font-weight:600}
 label.check small{color:var(--ink-soft);font-size:.78rem}
 .consent-note{font-size:.78rem;color:var(--ink-soft)}
 .consent-note a{color:var(--rose)}
+
+/* salva nel calendario */
+.c-actions .btn svg{width:18px;height:18px}
+.cal-hint{margin:0}
+.mine-act{display:flex;gap:14px;flex:none}
+.result .c-actions .btn{flex:1 1 220px;white-space:nowrap}

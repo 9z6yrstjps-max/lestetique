@@ -348,6 +348,12 @@ label.check small{color:var(--ink-soft);font-size:.78rem}
 .consent-note{font-size:.78rem;color:var(--ink-soft)}
 .consent-note a{color:var(--rose)}
 
+/* salva nel calendario */
+.c-actions .btn svg{width:18px;height:18px}
+.cal-hint{margin:0}
+.mine-act{display:flex;gap:14px;flex:none}
+.result .c-actions .btn{flex:1 1 220px;white-space:nowrap}
+
 /* Contatti: WhatsApp, telefono, indirizzo e orari — stesso linguaggio delle schede trattamenti e della scheda in apertura */
 .contact{background:var(--paper)}
 .ct-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(28px,4vw,48px);align-items:start}
@@ -1311,6 +1317,7 @@ $('topPicks').innerHTML = TREATS.slice().sort(byPop).filter(t => t.stars >= 2).s
   `<button type="button" data-key="${esc(t.key)}"><span class="st" aria-label="${t.stars} stelle su 3">${'★'.repeat(t.stars)}</span>${esc(t.name)} <small>€${t.price}</small></button>`).join('');
 $('topPicks').addEventListener('click', e => { const b = e.target.closest('[data-key]'); if (!b) return; sel.value = b.dataset.key; addTreat(); });
 
+const CAL_SEEN = {};   // appuntamenti prenotati in questa visita, per «Salva nel calendario»
 const state = { picked: [], day: null, time: null, slots: [], mode: 'loading', uid: null, db: null, mine: {} };
 
 function totalMin() { return state.picked.reduce((s, t) => s + t.min, 0); }
@@ -1434,7 +1441,8 @@ $('bookForm').addEventListener('submit', async e => {
     showResult(`<p class="ok-title">Prenotazione confermata</p>
       <p><b>${longDate(booking.date)}, ore ${hm(booking.start)}</b><br>${esc(booking.treatments.join(' + '))}</p>
       <p class="small">È già nell'agenda di Paola. Se vuoi, avvisala anche su WhatsApp.</p>
-      <div class="c-actions"><a class="btn btn-wa" href="${waLink(text)}" target="_blank" rel="noopener">${WA_ICON}Avvisa Paola</a></div>`);
+      <div class="c-actions"><button type="button" class="btn btn-gold" data-cal="${booking.id}">${CAL_ICON}Salva nel calendario</button><a class="btn btn-wa" href="${waLink(text)}" target="_blank" rel="noopener">${WA_ICON}Avvisa Paola</a></div>
+      <p class="small cal-hint">${calHint()}</p>`);
     state.picked = []; state.time = null; $('f-notes').value = ''; $('f-promo').checked = $('f-sumisura').checked = false; renderPicked();
   } catch (err) {
     if (err && err.code === 'taken') {
@@ -1466,9 +1474,11 @@ async function book() {
     if (/troppo_presto|fuori_orario|giorno_non_valido/.test(m)) throw { code: 'bad_time' };
     throw { code: 'other', message: m };
   }
-  const mine = loadMine(); mine.push({ id: data.id, token: data.token, date, start, end: start + dur, treatments, status: 'confermata' }); saveMine(mine);
+  const item = { id: data.id, token: data.token, date, start, end: start + dur, treatments, status: 'confermata' };
+  CAL_SEEN[data.id] = item;
+  const mine = loadMine(); mine.push(item); saveMine(mine);
   refreshMine(); refreshSlots();
-  return { date, start, treatments };
+  return { id: data.id, date, start, treatments };
 }
 
 /* Le mie prenotazioni (cliente): ricordate in questo browser con un codice segreto */
@@ -1488,7 +1498,7 @@ async function refreshMine() {
 function renderMine() {
   const items = Object.entries(state.mine).filter(([, b]) => b.status === 'confermata' && b.date >= todayIso()).sort((a, b) => (a[1].date + pad(a[1].start)).localeCompare(b[1].date + pad(b[1].start)));
   $('mine').hidden = !items.length;
-  $('mineList').innerHTML = items.map(([id, b]) => `<li><div><b>${longDate(b.date)}, ${hm(b.start)}</b><span>${esc(b.treatments.join(' + '))}</span></div><button type="button" class="link-btn" data-cancel="${id}">Annulla</button></li>`).join('');
+  $('mineList').innerHTML = items.map(([id, b]) => `<li><div><b>${longDate(b.date)}, ${hm(b.start)}</b><span>${esc(b.treatments.join(' + '))}</span></div><span class="mine-act"><button type="button" class="link-btn" data-cal="${id}">Calendario</button><button type="button" class="link-btn" data-cancel="${id}">Annulla</button></span></li>`).join('');
 }
 $('mineList').addEventListener('click', async e => {
   const b = e.target.closest('[data-cancel]'); if (!b) return;
@@ -1502,6 +1512,55 @@ $('mineList').addEventListener('click', async e => {
     await refreshMine(); refreshSlots();
     say(data ? 'Prenotazione annullata' : 'La prenotazione era già stata annullata');
   } catch { b.disabled = false; say('Non sono riuscita ad annullare. Scrivimi su WhatsApp.'); }
+});
+
+/* ---------- Salva l'appuntamento nel calendario del telefono ----------
+   iPhone/iPad e computer: file .ics (si apre «Aggiungi al calendario», con due promemoria).
+   Android: Google Calendar con l'evento già compilato. Serve sempre un tocco della cliente per confermare. */
+const STUDIO_ADDR = 'Via Mario Lanzotti 1, 82018 San Giorgio del Sannio (BN)';
+const CAL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>';
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isAndroid = () => /Android/i.test(navigator.userAgent);
+function calHint() {
+  return isAndroid() ? 'Si apre Google Calendar con l\'appuntamento già compilato: tocca «Salva».'
+    : isIOS() ? 'Si apre il Calendario con l\'appuntamento già compilato: tocca «Aggiungi». Ti ricorda l\'appuntamento il giorno prima e due ore prima.'
+    : 'Scarica il file e aprilo: l\'appuntamento si aggiunge al tuo calendario, con promemoria il giorno prima e due ore prima.';
+}
+function calStamp(date, min) { return date.replace(/-/g, '') + 'T' + pad(Math.floor(min / 60)) + pad(min % 60) + '00'; }
+function calData(b) {
+  const what = b.treatments.join(' + ');
+  return { title: `L'Estetique · ${what}`, start: calStamp(b.date, b.start), end: calStamp(b.date, b.end),
+    details: `${what}\nL'Estetique, Bellezza e Benessere di Paola Parisio\nPer spostare o annullare: WhatsApp +39 393 007 6415` };
+}
+function icsText(b) {
+  const c = calData(b), e = s => s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
+  const now = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//L\'Estetique//Prenotazioni//IT', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'BEGIN:VEVENT', `UID:${b.id || now}@lestetique`, `DTSTAMP:${now}`,
+    `DTSTART;TZID=Europe/Rome:${c.start}`, `DTEND;TZID=Europe/Rome:${c.end}`,
+    `SUMMARY:${e(c.title)}`, `LOCATION:${e(STUDIO_ADDR)}`, `DESCRIPTION:${e(c.details)}`,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${e(c.title)}`, 'TRIGGER:-P1D', 'END:VALARM',
+    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${e(c.title)}`, 'TRIGGER:-PT2H', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+}
+function addToCalendar(b) {
+  if (isAndroid()) {
+    const c = calData(b);
+    const q = new URLSearchParams({ action: 'TEMPLATE', text: c.title, dates: `${c.start}/${c.end}`, ctz: 'Europe/Rome', location: STUDIO_ADDR, details: c.details });
+    window.open('https://calendar.google.com/calendar/render?' + q.toString(), '_blank', 'noopener');
+    return;
+  }
+  const ics = icsText(b);
+  if (isIOS()) { location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics); return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+  a.download = `appuntamento-lestetique-${b.date}.ics`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-cal]'); if (!btn) return;
+  const b = CAL_SEEN[btn.dataset.cal] || loadMine().find(x => x.id === btn.dataset.cal) || state.mine[btn.dataset.cal];
+  if (b) addToCalendar(b); else say('Non trovo questo appuntamento su questo telefono');
 });
 
 /* ===== area-riservata/area-riservata.js ===== */
