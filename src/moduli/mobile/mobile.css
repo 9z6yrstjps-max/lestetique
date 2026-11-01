@@ -48,8 +48,20 @@
   .foot-social nav{justify-content:center}
 }
 @media (max-width:560px){
-  /* contatti: le regole "telefono piccolo" del modulo mettevano il pulsante in seconda colonna */
-  .ct-card{grid-template-columns:1fr;padding:24px 20px}
-  .ct-act{grid-column:auto}
+  /* contatti compatti: una riga per contatto (icona · testo · pulsante), niente descrizioni */
+  .ct-card{grid-template-columns:30px minmax(0,1fr) auto;justify-items:stretch;align-items:center;text-align:left;gap:2px 12px;padding:14px 16px}
+  .ct-ico{width:30px;height:30px}.ct-ico svg{width:24px;height:24px}
+  .ct-lbl{font-size:.6rem;letter-spacing:.16em}
+  .ct-txt{gap:1px}
+  .ct-txt h3{font-size:1.12rem}
+  .ct-txt p{display:none}
+  .ct-card:nth-child(3) .ct-txt p{display:block;font-size:.76rem;line-height:1.35}
+  .ct-act{grid-column:auto;margin:0}
+  .ct-act .btn{min-width:0;padding:8px 14px;font-size:.66rem;letter-spacing:.06em}
+  .ct-left{gap:14px}
+  .ct-social{gap:8px 10px}
+  .ct-social nav{gap:6px}
+  .ct-social .soon,.ct-social a{padding:6px 10px;font-size:.74rem;gap:5px}
+  .ct-social .soon small{font-size:.54rem}
   .vetrina .cat-meta{align-items:center}
 }
