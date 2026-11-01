@@ -65,3 +65,17 @@
   .ct-social .soon small{font-size:.54rem}
   .vetrina .cat-meta{align-items:center}
 }
+
+/* slider su telefono: frecce ai bordi della sezione al posto dei comandi sotto */
+@media (max-width:760px){
+  .v-ctrl{position:static;padding:0;height:0;overflow:visible}
+  .v-dots,.v-play{display:none}
+  .v-arrow{position:absolute;top:min(50%, 42vh);z-index:5;width:28px;height:60px;margin-top:-30px;border-radius:0 999px 999px 0;
+    background:rgba(255,255,255,.92);border:1px solid var(--line);border-left:0;box-shadow:0 8px 20px -10px rgba(120,90,55,.45);color:var(--rose)}
+  #vNext{right:0;border-radius:999px 0 0 999px;border-left:1px solid var(--line);border-right:0}
+  #vPrev{left:0}
+  .v-arrow svg{width:18px;height:18px}
+  .vetrina:not(.touched) #vNext{animation:vnudge 1.6s ease-in-out 1s 3}
+  .vetrina .wrap{padding-left:max(32px, env(safe-area-inset-left,0px));padding-right:max(32px, env(safe-area-inset-right,0px))}
+}
+@keyframes vnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}

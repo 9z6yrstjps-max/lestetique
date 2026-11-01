@@ -14,8 +14,10 @@ function vFit() { $('vTrack').style.height = V.slides[V.i].offsetHeight + 'px'; 
 if (window.ResizeObserver) { const ro = new ResizeObserver(vFit); V.slides.forEach(s => ro.observe(s)); } else addEventListener('resize', vFit);
 /* scorre da solo solo quando lo slider è ben visibile, così il resto della pagina non si sposta mentre si legge */
 if (window.IntersectionObserver) new IntersectionObserver(([e]) => $('vetrina').classList.toggle('away', e.intersectionRatio < 0.6), { threshold: [0, 0.6, 1] }).observe($('vetrina'));
-$('vPrev').addEventListener('click', () => vGo(V.i - 1));
-$('vNext').addEventListener('click', () => vGo(V.i + 1));
+/* sul telefono (frecce ai bordi, senza tasto pausa) chi sfoglia da sé ferma lo scorrimento automatico */
+function vUser() { $('vetrina').classList.add('touched'); if (matchMedia('(max-width: 760px)').matches) $('vetrina').classList.add('stopped'); }
+$('vPrev').addEventListener('click', () => { vUser(); vGo(V.i - 1); });
+$('vNext').addEventListener('click', () => { vUser(); vGo(V.i + 1); });
 $('vDots').addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (b) vGo(+b.dataset.s); });
 $('vDots').addEventListener('animationend', () => { if (!$('vetrina').classList.contains('stopped')) vGo(V.i + 1); });
 $('vPlay').addEventListener('click', () => {
@@ -31,7 +33,7 @@ let vTouch = null;
 $('vTrack').addEventListener('touchstart', e => { const t = e.touches[0]; vTouch = [t.clientX, t.clientY]; }, { passive: true });
 $('vTrack').addEventListener('touchend', e => {
   if (!vTouch) return; const t = e.changedTouches[0], dx = t.clientX - vTouch[0], dy = t.clientY - vTouch[1]; vTouch = null;
-  if (Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) vGo(V.i + (dx < 0 ? 1 : -1));
+  if (Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) { vUser(); vGo(V.i + (dx < 0 ? 1 : -1)); }
 });
 /* i link del menu portano alla slide giusta */
 function vFromHash(h) { if (h === '#trattamenti') vGo(1); else if (h === '#home') vGo(0); }
