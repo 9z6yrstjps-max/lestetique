@@ -90,21 +90,130 @@ $('agendaList').addEventListener('click', async e => {
     say(s && s.kind === 'block' ? 'Orario sbloccato' : 'Appuntamento annullato');
   } catch { b.disabled = false; say('Operazione non riuscita, riprova.'); }
 });
+/* ---------- Nuovo appuntamento (collegato alla scheda cliente) o blocco orario ---------- */
+const bf = { mode: 'app', clients: null, cli: null, isNew: false, picked: [] };
+const toMin = v => { const [h, m] = String(v || '0:0').split(':').map(Number); return h * 60 + m; };
+const toHHMM = m => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+function bfSetMode(m) {
+  bf.mode = m;
+  [...$('bfMode').children].forEach(b => b.setAttribute('aria-checked', String(b.dataset.m === m)));
+  $('blockForm').querySelectorAll('.app-only').forEach(el => { el.hidden = m !== 'app' || (el.id === 'aNew' && !bf.isNew); });
+  $('blockForm').querySelectorAll('.block-only').forEach(el => { el.hidden = m !== 'block'; });
+  $('b-note-l').innerHTML = m === 'app' ? 'Note <small>(facoltative)</small>' : 'Descrizione';
+  $('b-note').placeholder = m === 'app' ? 'Es. colore preferito' : 'Es. pausa pranzo, corso, ferie';
+  $('bfSave').textContent = m === 'app' ? 'Fissa appuntamento' : 'Blocca';
+  $('e-block').textContent = '';
+  if (m === 'block') { $('b-day').checked = false; $('b-from').disabled = $('b-to').disabled = false; }
+}
+$('bfMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) bfSetMode(b.dataset.m); });
+$('a-treat').innerHTML = treatOptionsAg();
+function treatOptionsAg() {
+  return '<option value="">Aggiungi un trattamento…</option>' + LISTINO.map(c => `<optgroup label="${esc(c.name)}">${c.groups.flatMap(g => g.items).map(x => `<option value="${esc(c.id + ':' + x.name)}">${esc(x.name)} · €${x.price}</option>`).join('')}</optgroup>`).join('');
+}
+async function bfLoadClients(force) {
+  if (bf.clients && !force) return bf.clients;
+  const { data, error } = await sb.from('clienti').select('id,nome,cognome,telefono').order('cognome').order('nome');
+  bf.clients = error ? [] : data;
+  return bf.clients;
+}
+function bfRenderPicked() {
+  const items = bf.picked.map(k => TREATS.find(t => t.key === k)).filter(Boolean);
+  $('aPicked').innerHTML = items.map((t, i) => `<li><span>${esc(t.name)} <small>${dur(t.min)}</small></span><button type="button" aria-label="Togli ${esc(t.name)}" data-i="${i}">×</button></li>`).join('');
+  const min = items.reduce((s, t) => s + t.min, 0), eur = items.reduce((s, t) => s + t.price, 0);
+  $('a-price').value = items.length ? String(eur) : '';
+  if (min) { const st = toMin($('b-from').value); $('b-to').value = toHHMM(Math.min(1440, st + min)); }
+}
+$('a-treat').addEventListener('change', e => { if (!e.target.value) return; if (bf.picked.length < 8) bf.picked.push(e.target.value); e.target.value = ''; bfRenderPicked(); });
+$('aPicked').addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) { bf.picked.splice(+b.dataset.i, 1); bfRenderPicked(); } });
+$('b-from').addEventListener('change', () => { if (bf.mode === 'app' && bf.picked.length) bfRenderPicked(); });
+/* ricerca cliente */
+function bfSuggest() {
+  const q = $('a-cli').value.trim().toLowerCase(), qd = q.replace(/\D/g, '');
+  const ul = $('aSugg');
+  if (q.length < 2) { ul.hidden = true; $('a-cli').setAttribute('aria-expanded', 'false'); return; }
+  const list = (bf.clients || []).filter(c => `${c.nome} ${c.cognome} ${c.nome}`.toLowerCase().includes(q) || (qd.length >= 3 && String(c.telefono).replace(/\D/g, '').includes(qd))).slice(0, 6);
+  ul.innerHTML = list.map(c => `<li role="option"><button type="button" data-cli="${c.id}"><b>${esc(c.cognome)}</b> ${esc(c.nome)} <small>${esc(c.telefono)}</small></button></li>`).join('')
+    + `<li role="option"><button type="button" data-new="1" class="sugg-new">＋ Nuova cliente${/\d/.test(q) ? '' : ` «${esc($('a-cli').value.trim())}»`}</button></li>`;
+  ul.hidden = false; $('a-cli').setAttribute('aria-expanded', 'true');
+}
+$('a-cli').addEventListener('focus', () => bfLoadClients().then(bfSuggest));
+$('a-cli').addEventListener('input', () => { bfLoadClients().then(bfSuggest); });
+$('a-cli').addEventListener('keydown', e => { if (e.key === 'Escape') { $('aSugg').hidden = true; } if (e.key === 'Enter') { e.preventDefault(); const f = $('aSugg').querySelector('button'); if (f && !$('aSugg').hidden) f.click(); } });
+document.addEventListener('click', e => { if (!e.target.closest('.cl-pick')) $('aSugg').hidden = true; });
+$('aSugg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.cli) bfChoose(bf.clients.find(c => c.id === b.dataset.cli));
+  else {
+    const t = $('a-cli').value.trim();
+    bf.cli = null; bf.isNew = true;
+    if (/\d/.test(t)) { $('a-tel').value = t; $('a-nome').value = $('a-cognome').value = ''; }
+    else { const [n, ...r] = t.split(/\s+/); $('a-nome').value = n ? n[0].toUpperCase() + n.slice(1) : ''; $('a-cognome').value = r.join(' ').replace(/^./, x => x.toUpperCase()); $('a-tel').value = ''; }
+    $('aSugg').hidden = true; $('a-cli').value = ''; $('a-cli').parentElement.querySelector('input').hidden = true;
+    $('aChosen').hidden = false; $('aChosen').innerHTML = '<span><b>Nuova cliente</b><small>compila i dati qui sotto</small></span><button type="button" class="link-btn" id="aChange">Cerca</button>';
+    bfSetMode('app'); (/\d/.test(t) ? $('a-nome') : $('a-tel')).focus();
+  }
+});
+function bfChoose(c) {
+  if (!c) return;
+  bf.cli = c; bf.isNew = false;
+  $('aSugg').hidden = true; $('a-cli').hidden = true; $('a-cli').value = '';
+  $('aChosen').hidden = false;
+  $('aChosen').innerHTML = `<span><b>${esc(c.nome)} ${esc(c.cognome)}</b><small>${esc(c.telefono)}</small></span><button type="button" class="link-btn" id="aChange">Cambia</button>`;
+  bfSetMode('app');
+}
+$('aChosen').addEventListener('click', e => {
+  if (e.target.id !== 'aChange') return;
+  bf.cli = null; bf.isNew = false; $('aChosen').hidden = true; $('a-cli').hidden = false; bfSetMode('app'); $('a-cli').focus();
+});
+function bfReset() {
+  bf.cli = null; bf.isNew = false; bf.picked = [];
+  $('a-cli').hidden = false; $('a-cli').value = ''; $('aChosen').hidden = true;
+  ['a-nome', 'a-cognome', 'a-tel', 'b-note'].forEach(id => { $(id).value = ''; });
+  bfRenderPicked(); bfSetMode(bf.mode);
+}
 $('b-day').addEventListener('change', e => { $('b-from').disabled = $('b-to').disabled = e.target.checked; });
 $('blockForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const date = $('b-date').value, all = $('b-day').checked;
-  const toM = v => { const [h, m] = v.split(':').map(Number); return h * 60 + m; };
-  const start = all ? 0 : toM($('b-from').value || '0:0'), end = all ? 1440 : toM($('b-to').value || '0:0');
-  if (!date) { $('e-block').textContent = 'Scegli il giorno.'; return; }
-  if (end <= start) { $('e-block').textContent = "L'ora di fine deve essere dopo l'inizio."; return; }
-  $('e-block').textContent = '';
-  try {
-    const r = await sb.from('slots').insert({ day: date, start_min: start, end_min: end, kind: 'block', note: $('b-note').value.trim() || null });
-    if (r.error) throw r.error;
-    $('b-note').value = ''; await refreshSlots(); say('Orario bloccato');
-  } catch { $('e-block').textContent = 'Non sono riuscita a salvare. Riprova.'; }
+  const date = $('b-date').value, err = m => { $('e-block').textContent = m; };
+  if (!date) return err('Scegli il giorno.');
+  if (bf.mode === 'block') {
+    const all = $('b-day').checked;
+    const start = all ? 0 : toMin($('b-from').value), end = all ? 1440 : toMin($('b-to').value);
+    if (end <= start) return err("L'ora di fine deve essere dopo l'inizio.");
+    err('');
+    try {
+      const r = await sb.from('slots').insert({ day: date, start_min: start, end_min: end, kind: 'block', note: $('b-note').value.trim() || null });
+      if (r.error) throw r.error;
+      $('b-note').value = ''; await refreshSlots(); say('Orario bloccato');
+    } catch { err('Non sono riuscita a salvare. Riprova.'); }
+    return;
+  }
+  // appuntamento
+  if (!bf.cli && !bf.isNew) return err('Scegli la cliente, o creane una nuova.');
+  if (bf.isNew && (!$('a-nome').value.trim() || !$('a-cognome').value.trim())) return err('Scrivi nome e cognome della nuova cliente.');
+  if (bf.isNew && $('a-tel').value.replace(/\D/g, '').length < 8) return err('Serve il cellulare della nuova cliente.');
+  if (!bf.picked.length) return err('Scegli almeno un trattamento.');
+  const start = toMin($('b-from').value), end = toMin($('b-to').value);
+  if (end <= start) return err("L'ora di fine deve essere dopo l'inizio.");
+  const price = parseAmt($('a-price').value || '0') / 100;
+  if (!(price >= 0)) return err('Scrivi un prezzo valido, ad esempio 18 o 18,50.');
+  err(''); $('bfSave').disabled = true;
+  const treatments = bf.picked.map(k => TREATS.find(t => t.key === k).name);
+  const { error } = await sb.rpc('fissa_appuntamento', {
+    p_day: date, p_start: start, p_end: end, p_cliente: bf.cli ? bf.cli.id : null,
+    p_nome: bf.isNew ? $('a-nome').value.trim() : null, p_cognome: bf.isNew ? $('a-cognome').value.trim() : null, p_phone: bf.isNew ? $('a-tel').value.trim() : null,
+    p_treatments: treatments, p_price: price, p_notes: $('b-note').value.trim() });
+  $('bfSave').disabled = false;
+  if (error) {
+    const m = (error.code || '') + ' ' + (error.message || '');
+    return err(/orario_occupato/.test(m) ? "In quell'orario c'è già un appuntamento o un blocco." : /PGRST202|Could not find/i.test(m) ? 'Prima va aggiornato il database (file 8-appuntamenti-da-studio.sql).' : /telefono/.test(m) ? 'Il cellulare non sembra valido.' : 'Non sono riuscita a salvare. Riprova.');
+  }
+  const wasNew = bf.isNew;
+  bfReset(); if (wasNew) bfLoadClients(true);
+  await refreshSlots(); await loadAgendaDetails();
+  say('Appuntamento fissato');
 });
+bfSetMode('app');
 
 /* ---------- Registro di cassa ---------- */
 function monthItems(k) { return Object.entries((area.cassa[k] && area.cassa[k].items) || {}).map(([id, x]) => ({ id, ...x })); }

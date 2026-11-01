@@ -188,3 +188,18 @@ body.private footer .script{display:none}
 .act-tools select{width:auto;padding:8px 12px;font-size:.85rem}
 #actClean[data-armed="1"]{border-color:var(--neg);color:var(--neg)}
 @media (max-width:640px){.act-head{flex-direction:column;align-items:flex-start}}
+.block-form .seg.full{margin-bottom:4px}
+.cl-pick{position:relative}
+.cl-sugg{position:absolute;left:0;right:0;top:100%;z-index:20;list-style:none;margin:4px 0 0;padding:6px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -20px rgba(120,90,55,.45);max-height:280px;overflow:auto}
+.cl-sugg button{width:100%;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;text-align:left;font:inherit;font-size:.9rem;color:var(--ink);background:none;border:0;border-radius:10px;padding:9px 10px;cursor:pointer}
+.cl-sugg button:hover,.cl-sugg button:focus-visible{background:var(--blush)}
+.cl-sugg small{color:var(--ink-soft);font-size:.78rem}
+.cl-sugg .sugg-new{color:var(--rose);font-weight:600}
+.cl-chosen{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--blush);border:1px solid var(--rose-light);border-radius:12px;padding:10px 14px}
+.cl-chosen span{display:flex;flex-direction:column;min-width:0}
+.cl-chosen small{color:var(--ink-soft);font-size:.8rem}
+.new-cli{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;padding:14px;border:1px dashed var(--rose-light);border-radius:14px}
+.new-cli .lbl{grid-column:1/-1;margin:0}
+.new-cli .full{grid-column:1/-1}
+.new-cli[hidden]{display:none}
+.block-form .new-cli,.block-form .cl-pick{grid-column:1/-1}

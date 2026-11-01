@@ -39,16 +39,37 @@
     <div class="view" id="view-agenda" hidden>
       <div class="agenda-grid" id="agendaGrid">
         <form class="block-form" id="blockForm" novalidate>
-          <p class="lbl">Blocca un orario</p>
+          <div class="seg seg-sm full" role="radiogroup" aria-label="Cosa vuoi inserire" id="bfMode">
+            <button type="button" role="radio" data-m="app" aria-checked="true">Appuntamento</button>
+            <button type="button" role="radio" data-m="block" aria-checked="false">Blocca orario</button>
+          </div>
+          <div class="field full app-only cl-pick">
+            <label for="a-cli">Cliente</label>
+            <input id="a-cli" placeholder="Cerca nome, cognome o telefono" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="aSugg" aria-expanded="false">
+            <ul class="cl-sugg" id="aSugg" role="listbox" hidden></ul>
+            <div class="cl-chosen" id="aChosen" hidden></div>
+          </div>
+          <div class="app-only new-cli full" id="aNew" hidden>
+            <p class="lbl">Nuova cliente</p>
+            <div class="field"><label for="a-nome">Nome</label><input id="a-nome" maxlength="40" autocomplete="off"></div>
+            <div class="field"><label for="a-cognome">Cognome</label><input id="a-cognome" maxlength="60" autocomplete="off"></div>
+            <div class="field full"><label for="a-tel">Cellulare</label><input id="a-tel" type="tel" inputmode="tel" autocomplete="off"></div>
+          </div>
+          <div class="field full app-only">
+            <label for="a-treat">Trattamento</label>
+            <select id="a-treat"></select>
+            <ul class="picked" id="aPicked"></ul>
+          </div>
           <div class="field full"><label for="b-date">Giorno</label><input id="b-date" type="date"></div>
           <div class="field"><label for="b-from">Dalle</label><input id="b-from" type="time" step="900" value="09:00"></div>
           <div class="field"><label for="b-to">Alle</label><input id="b-to" type="time" step="900" value="10:00"></div>
-          <div class="field full"><label for="b-note">Descrizione</label><input id="b-note" placeholder="Es. Maria Rossi, manicure (al telefono)"></div>
-          <div class="field full chips">
+          <div class="field full app-only"><label for="a-price">Prezzo (€)</label><input id="a-price" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+          <div class="field full"><label for="b-note" id="b-note-l">Note <small>(facoltative)</small></label><input id="b-note" placeholder="Es. colore preferito"></div>
+          <div class="field full chips block-only" hidden>
             <input type="checkbox" id="b-day"><label for="b-day">Tutto il giorno (chiusura)</label>
           </div>
           <span class="err" id="e-block"></span>
-          <button class="btn btn-gold" type="submit">Blocca</button>
+          <button class="btn btn-gold" type="submit" id="bfSave">Fissa appuntamento</button>
         </form>
         <div class="agenda-list" id="agendaList"></div>
       </div>
